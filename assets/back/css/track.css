@@ -1,0 +1,73 @@
+
+
+
+.order-track-step {
+  display: flex;
+  height: 6rem;
+  margin-top:0.5em;
+}
+.order-track-step:last-child {
+  overflow: hidden;
+  height: 4rem;
+}
+.order-track-step:last-child .order-track-status span:last-of-type {
+  display: none;
+}
+.order-track-status {
+  margin-right: 0.8rem;
+  position: relative;
+}
+.order-track-status-dot {
+  display: block;
+  width: 2.2rem;
+  height: 2rem;
+}
+.order-track-status-line {
+  display: block;
+  margin: 0 auto;
+  width: 2px;
+  height: 4.8rem;
+  background: #59605a;
+}
+.order-track-text-stat {
+  position: relative;
+  display: flex;
+  padding: 1.25rem;
+}
+.shad{
+  box-shadow: 1px 1px 1px rgba(0,0,0,0.8);
+    display: inline-flex;
+    position: relative;
+    flex-wrap: wrap;
+}
+.pd{
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+.status{
+  display: flex;
+  margin-left: 1.5em;
+  color: blue;
+}
+.calendar{
+  margin-inline-start: 0.3em;
+  margin-inline-end: 1.3em;
+}
+.jam{
+  display: flex;
+  margin-inline-start: 1.3em;
+  margin-inline-end: 1em;
+}
+.waktu{
+  display: flex;
+  margin-inline-end: 2em;
+}
+.clock{
+  display: flex;
+  margin-inline-start: 10em;
+}
+.nama{
+  display: flex;
+  margin-inline-start: 5px;
+  padding-inline-start: 10px;
+}
