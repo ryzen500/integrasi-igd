@@ -19,7 +19,8 @@
 
           <!-- Page Heading -->
           <div class="bg-white py-lg-5">
-            <form method="POST" action="<?= site_url('user/Dashboard/buat_tiket_action'); ?>" enctype="multipart/form-data">
+            <form method="POST" action="<?= site_url('user/Dashboard/buat_tiket_action'); ?>"
+              enctype="multipart/form-data">
               <!--  -->
               <div class="form-group row ml-5 mr-5">
                 <label for="id" class="col-sm-2 col-form-label">Departemen<sup style="color: red;">*</sup></label>
@@ -47,10 +48,24 @@
               </div>
 
 
+
               <div class="form-group row ml-5 mr-5">
                 <!-- Your existing form content here -->
 
-                <label for="file" class="col-sm-2 col-form-label">Upload File</label>
+                <label for="file" class="col-sm-2 col-form-label">Nama Pelapor</label>
+                <div class="col-sm-5" id="file-upload-container">
+                  <select id="myDropdown" class="form-control" name="nama_pelapor">
+                    <option value="">--Pilih opsi--</option>
+                  </select>
+                </div>
+
+              </div>
+
+
+              <div class="form-group row ml-5 mr-5">
+                <!-- Your existing form content here -->
+
+                <label for="file" class="col-sm-2 col-form-label">Data Pendukung</label>
                 <div class="col-sm-5" id="file-upload-container">
                   <input type="file" class="form-control" name="files[]" id="file-upload-0">
                 </div>
@@ -122,13 +137,39 @@
     <i class="fas fa-angle-up"></i>
   </a>
   <script>
-// JavaScript to add a new file upload field when the "plus" icon is clicked
-$(document).ready(function() {
-  let fileUploadIndex = 1; // Track the file upload count
+    // JavaScript to add a new file upload field when the "plus" icon is clicked
+    $(document).ready(function () {
+      let fileUploadIndex = 1; // Track the file upload count
 
-  $('#add-file-upload').click(function() {
-    // Create a new file input
-    let newFileInput = `
+      var url = 'http://localhost/helpdesk-api-dashboard/data-dropdown.php';
+      
+      $('#myDropdown').select2({
+            placeholder: 'Masukkan  Nama Pelapor...',
+            allowClear: true,
+            ajax: {
+                url: url, // Endpoint API
+                dataType: 'json',
+                delay: 250, // Penundaan untuk mengurangi beban server
+                data: function(params) {
+                    return {
+                        q: params.term // Mengambil parameter pencarian dari input
+                    };
+                },
+                processResults: function(data) {
+                    return {
+                        results: data.map(function(item) {
+                            return {
+                                id: item.name,
+                                text: item.name // Sesuaikan dengan format data dari endpoint
+                            };
+                        })
+                    };
+                }
+            }
+        });
+      $('#add-file-upload').click(function () {
+        // Create a new file input
+        let newFileInput = `
       <div class="input-group mt-3" id="file-upload-${fileUploadIndex}">
         <input type="file" class="form-control" name="files[]">
         <button type="button" class="btn btn-danger remove-file-upload  ml-2" data-id="file-upload-${fileUploadIndex}">
@@ -137,14 +178,14 @@ $(document).ready(function() {
       </div>
     `;
 
-    $('#file-upload-container').append(newFileInput); // Add the new input
-    fileUploadIndex++; // Increment the index
-  });
+        $('#file-upload-container').append(newFileInput); // Add the new input
+        fileUploadIndex++; // Increment the index
+      });
 
-  // Remove file upload when the "minus" icon is clicked
-  $(document).on('click', '.remove-file-upload', function() {
-    const id = $(this).data('id');
-    $(`#${id}`).remove(); // Remove the corresponding file input
-  });
-});
-</script>
+      // Remove file upload when the "minus" icon is clicked
+      $(document).on('click', '.remove-file-upload', function () {
+        const id = $(this).data('id');
+        $(`#${id}`).remove(); // Remove the corresponding file input
+      });
+    });
+  </script>

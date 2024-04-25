@@ -117,7 +117,8 @@ class Dashboard extends CI_Controller
             $tanggal = date("Y-m-d H:i:s");
             $id_user = $this->input->post('id_user');
             $STATUS_TIKET = 1;
-            $id_inventory = 7;
+            $id_inventory = $this->input->post('id_inventory');;
+            $nama_pelapor = $this->input->post('nama_pelapor');
 
             // Create the data array for the "tiket" table
             $datas = array(
@@ -126,7 +127,8 @@ class Dashboard extends CI_Controller
                 'tanggal' => $tanggal,
                 'id_tiket' => $tiket,
                 'STATUS_TIKET' => $STATUS_TIKET,
-                'id_inventory' => $id_inventory
+                'id_inventory' => $id_inventory,
+                'nama_pelapor'=>$nama_pelapor
             );
 
 
@@ -192,6 +194,7 @@ class Dashboard extends CI_Controller
             // Redirect after success
             redirect('user/Dashboard');
         } else {
+            // validation_errors(); 
             $this->buat_tiket();  // If validation fails, go back to the ticket creation form
         }
     }

@@ -28,7 +28,7 @@
                                                 <thead>
                                                     <tr>
                                                         <th>No.</th>
-                                                        <th>No. Tiket</th>
+                                                        <th>No. Tiket Ajuan Complain</th>
                                                         <th>Departemen</th>
                                                         <th>Tipe Masalah</th>
                                                         <th>Keterangan Masalah</th>
@@ -39,7 +39,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <?php $no = 1;
+                                                    <?php $no = 0;
                                                     foreach ((array)$tiket as $user) {
                                                         $idstatus = $user->STATUS_TIKET;
                                                         if ($idstatus == 1) {
@@ -58,9 +58,10 @@
                                                             $css = "badge badge-light";
                                                         }
 
+                                                        $no++
                                                     ?>
                                                         <tr>
-                                                            <td><?= $no++ ?></td>
+                                                            <td><?= $no  ?></td>
                                                             <td><?= $user->ID_TIKET ?></td>
                                                             <td><?= $user->DEPARTEMEN ?></td>
                                                             <td><?= $user->SUB_MASALAH ?></td>
