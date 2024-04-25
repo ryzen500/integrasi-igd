@@ -143,6 +143,11 @@
 
       var url = 'http://localhost/helpdesk-api-dashboard/data-dropdown.php';
       
+
+
+      
+      // Dropdown
+
       $('#myDropdown').select2({
             placeholder: 'Masukkan  Nama Pelapor...',
             allowClear: true,
@@ -181,6 +186,8 @@
         $('#file-upload-container').append(newFileInput); // Add the new input
         fileUploadIndex++; // Increment the index
       });
+
+      
 
       // Remove file upload when the "minus" icon is clicked
       $(document).on('click', '.remove-file-upload', function () {

@@ -28,6 +28,21 @@ class Dashboard extends CI_Controller
         $this->template->load('user/template', 'user/page', $data);
     }
 
+
+
+    public function get_files() {
+        $tiket_id = $this->input->post('id');
+    
+        // Query untuk mendapatkan daftar file dari database
+        $file_list = $this->db->get_where('uploaded_files', array('ID_TIKET' => $tiket_id))->result();
+    
+        if ($file_list) {
+            echo json_encode($file_list); // Kembalikan daftar file dalam format JSON
+        } else {
+            echo json_encode([]); // Kembalikan daftar kosong jika tidak ada file
+        }
+    }
+    
     public function buat_tiket()
     {
         $id = $this->session->userdata('id_user');
