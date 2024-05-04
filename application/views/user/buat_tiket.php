@@ -211,7 +211,7 @@
                         results: data.map(function(item) {
                           console.log(item.ID_DEPARTEMEN);
                             return {
-                                id: item.ID_DEPARTEMEN,
+                                id: item.NAMA_DEPARTEMEN,
                                 text: item.NAMA_DEPARTEMEN // Sesuaikan dengan format data dari endpoint
                             };
                         })
