@@ -9,6 +9,7 @@ class Dashboard extends CI_Controller
     {
         parent::__construct();
         belum_login('user/dashboard');
+        $this->load->helper('my_helper'); // Load helper global
         $this->load->model('Mlogin', 'ml');
         $this->load->model('user/Mtuser', 'mu');
         $this->load->model('user/MtFile', 'fm');
@@ -22,12 +23,27 @@ class Dashboard extends CI_Controller
     {
 
         $id = $this->session->userdata('id_user');
+        // var_dump($this->session->userdata('nama_user'));die;
         $data['user'] = $this->mu->get_profil($id)->row_array();
         $data['title'] = ' Tiket Saya';
-        $data['tiket'] = $this->mu->tiket();
+        $data['tiket'] = $this->mu->tiket_user();
         $this->template->load('user/template', 'user/page', $data);
     }
 
+
+    public function get_detail_masalah() {
+        $id = $this->input->post('id');
+        // Ambil data dari database berdasarkan ID
+        $data =  $this->db->get_where('tiket', array('ID_TIKET' => $id))->result();
+        
+
+        // echo "<pre>";
+        // var_dump($data);die;
+    
+        echo json_encode(array(
+            'full_masalah' => $data
+        ));
+    }
 
 
     public function get_files() {
@@ -146,17 +162,21 @@ class Dashboard extends CI_Controller
     {
         // Form validation rules
         $this->form_validation->set_rules('masalah', 'Nama Masalah', 'trim|required', ['required' => 'Masalah Wajib Diisi !!!']);
+        
+        // echo "<pre>";
+        // var_dump($_POST);die;
         if ($this->form_validation->run() == TRUE) {
 
             // Generate a unique id_tiket
-            $tiket = "T-" . date("Ymd") . rand(999, 111);
-            $masalah = $this->input->post('masalah');
+            $masalah = strip_tags($this->input->post('masalah'));
+            $id_user = htmlspecialchars($this->input->post('id_user'), ENT_QUOTES, 'UTF-8');
+            $id_inventory = htmlspecialchars($this->input->post('id_inventory'), ENT_QUOTES, 'UTF-8');
+            $nama_pelapor = htmlspecialchars($this->input->post('nama_pelapor'), ENT_QUOTES, 'UTF-8');
+            $divisi_pelapor = htmlspecialchars($this->input->post('divisi_pelapor'), ENT_QUOTES, 'UTF-8');
+            
             $tanggal = date("Y-m-d H:i:s");
-            $id_user = $this->input->post('id_user');
             $STATUS_TIKET = 1;
-            $id_inventory = $this->input->post('id_inventory');;
-            $nama_pelapor = $this->input->post('nama_pelapor');
-
+            $tiket = "T-" . date("Ymd") . rand(999, 111);
             // Create the data array for the "tiket" table
             $datas = array(
                 'masalah' => $masalah,
@@ -165,7 +185,8 @@ class Dashboard extends CI_Controller
                 'id_tiket' => $tiket,
                 'STATUS_TIKET' => $STATUS_TIKET,
                 'id_inventory' => $id_inventory,
-                'nama_pelapor'=>$nama_pelapor
+                'nama_pelapor'=>$nama_pelapor,
+                'divisi_pelapor'=>$divisi_pelapor
             );
 
 
