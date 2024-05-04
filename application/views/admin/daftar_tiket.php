@@ -18,6 +18,24 @@
 
                 <div class="card-body">
                     <div class="table-responsive">
+
+                    <div class="modal fade" id="fileModal" tabindex="-1" role="dialog"
+                                aria-labelledby="fileModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="fileModalLabel">Daftar File</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <ul id="fileList"></ul>
+                                            <!-- Daftar file akan diisi dengan JavaScript -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
@@ -30,6 +48,7 @@
                                     <th>Teknisi</th>
                                     <th>Status</th>
                                     <th>Opsi</th>
+                                    <th>Detail Attachment Pelapor</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -62,14 +81,22 @@
 
                                                 </span>
                                             </a>
-                                         
 
-                                            <a href="<?php  echo site_url('admin/Tiket/ambil_tiket/' . $mhs->ID_TIKET)?>" class="btn btn-danger">
-                                                                <span class="icon text-white-50">
-                                                                <i class="fa-regular fa-pen-to-square"></i>
-                                                                </span>
-                                                            </a>
+
+                                            <a href="<?php echo site_url('admin/Tiket/ambil_tiket/' . $mhs->ID_TIKET) ?>"
+                                                class="btn btn-danger">
+                                                <span class="icon text-white-50">
+                                                    <i class="fa-regular fa-pen-to-square"></i>
+                                                </span>
+                                            </a>
                                         </td>
+
+
+                                        <td><button type="button" class="btn btn-info" data-toggle="modal"
+                                                data-target="#fileModal"
+                                                data-id="<?= $mhs->ID_TIKET ?>">Detail</button>
+                                        </td>
+
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
@@ -84,3 +111,37 @@
     </div>
 </div>
 <!-- End of Content Wrapper -->
+
+<script>
+            $(document).ready(function () {
+                $('#fileModal').on('show.bs.modal', function (event) {
+                    var button = $(event.relatedTarget);
+                    var tiketId = button.data('id'); // Dapatkan ID Tiket
+
+                    // AJAX untuk mendapatkan daftar file
+                    $.ajax({
+                        url: '<?= site_url('admin/Dashboard/get_files') ?>', // Ubah ke endpoint API Anda
+                        type: 'POST',
+                        data: { id: tiketId },
+                        success: function (response) {
+                            var files = JSON.parse(response); // Parsing response
+                            var fileList = $("#fileList");
+                            fileList.empty(); // Kosongkan daftar sebelum mengisi ulang
+
+                            if (files.length > 0) {
+                                files.forEach(function (file) {
+                                    fileList.append(
+                                        `<li><a href='<?= base_url('uploads/') ?>${file.file_name}' target='_blank'>${file.file_name}</a></li>`
+                                    );
+                                });
+                            } else {
+                                fileList.append("<li>Tidak ada file yang ditemukan.</li>");
+                            }
+                        },
+                        error: function () {
+                            $("#fileList").html("Terjadi kesalahan saat mengambil file.");
+                        }
+                    });
+                });
+            });
+        </script>

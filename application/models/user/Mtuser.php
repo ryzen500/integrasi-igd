@@ -25,6 +25,19 @@ class Mtuser extends CI_Model
 
         return $this->db->get()->result();
     }
+
+    public function departemen_pelapor($query)
+    {
+
+        $this->db->select('d.*');
+        $this->db->from('departemen d');
+        $this->db->where('d.is_deleted','1');
+        if (!empty($query)) {
+            $this->db->like('d.NAMA_DEPARTEMEN', $query); // Mencari kesamaan dengan query
+        }
+
+        return $this->db->get()->result();
+    }
     public function inventory()
     {
 
@@ -37,9 +50,11 @@ class Mtuser extends CI_Model
     }
     public function get_profil($id = null)
     {
-        $this->db->select('u.*, d.NAMA_DEPARTEMEN AS departemen');
+        // $this->db->select('u.*, d.NAMA_DEPARTEMEN AS departemen');
+        $this->db->select('u.*');
+
         $this->db->from('user u');
-        $this->db->join('departemen d', 'd.ID_DEPARTEMEN=u.id_departemen');
+        // $this->db->join('departemen d', 'd.ID_DEPARTEMEN=u.id_departemen');
         $this->db->where('id_user', $id);
         return $this->db->get();
     }
@@ -70,7 +85,7 @@ class Mtuser extends CI_Model
     }
     function track_user($ID_TIKET)
     {
-        $this->db->select('t.ID_USER,t.ID_TIKET AS ID_TIKETS, t.TANGGAL AS tanggal_pengajuan,t.STATUS_TIKET AS STATUS_TIKET, u.nama_user AS user,s.STATUS_TIKET AS status ');
+        $this->db->select('t.nama_pelapor,t.ID_USER,t.ID_TIKET AS ID_TIKETS, t.TANGGAL AS tanggal_pengajuan,t.STATUS_TIKET AS STATUS_TIKET, u.nama_user AS user,s.STATUS_TIKET AS status ');
         $this->db->from('tiket t');
         $this->db->join('user u', 'u.ID_USER=t.ID_USER');
         $this->db->join('status_tiket s', 's.ID_STATUS =t.STATUS_TIKET');

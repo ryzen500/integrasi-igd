@@ -150,6 +150,19 @@ class Tiket extends CI_Controller
 		$this->template->load('admin/template', 'admin/data_tiket', $data);
 	}
 
+    public function get_files() {
+        $tiket_id = $this->input->post('id');
+    
+        // Query untuk mendapatkan daftar file dari database
+        $file_list = $this->db->get_where('uploaded_files', array('ID_TIKET' => $tiket_id))->result();
+    
+        if ($file_list) {
+            echo json_encode($file_list); // Kembalikan daftar file dalam format JSON
+        } else {
+            echo json_encode([]); // Kembalikan daftar kosong jika tidak ada file
+        }
+    }
+
 	public function update()
 	{
 		$ID_TIKET = $this->input->post('ID_TIKET');
@@ -162,6 +175,25 @@ class Tiket extends CI_Controller
 		$this->ml->update($data, $ID_TIKET);
 		redirect('admin/Tiket/daftar_tiket');
 	}
+
+    public function ganti_teknisi($ID_TIKET)
+    {
+        $STATUS_TIKET = 6;
+        $TEKNISI = $this->session->userdata('id_user');
+        $tanggal = date("Y-m-d H:i:s");
+        $data = [
+            'STATUS_TIKET' => $STATUS_TIKET
+        ];
+        $tiket_detail = array(
+            'ID_TIKET' => $ID_TIKET,
+            'TANGGAL' => $tanggal,
+            'ID_TEKNISI' => $TEKNISI,
+            'ID_STATUS' => $STATUS_TIKET
+        );
+        $this->mteknisi->update($data, $ID_TIKET);
+        $this->mteknisi->insert($tiket_detail, 'tiket_detail');
+        redirect('admin/dashboard/datatiket');
+    }
 
 	public function print()
 	{

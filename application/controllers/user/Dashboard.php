@@ -42,14 +42,36 @@ class Dashboard extends CI_Controller
             echo json_encode([]); // Kembalikan daftar kosong jika tidak ada file
         }
     }
+
+    public function get_departemen_pelapor() {
+       
+
+        $query = !empty($this->input->post('q', true)) ? $this->input->post('q', true) : null;
+
+        // $query =  !empty($this->input->post('q',true) ? $this->input->post('q',true) : null);
+        // var_dump($query);
+        // $query="farmasi";
+        $file_list = $this->mu->departemen_pelapor($query);
+        
+        if ($file_list) {
+            echo json_encode($file_list); // Kembalikan daftar file dalam format JSON
+        } else {
+            echo json_encode([]); // Kembalikan daftar kosong jika tidak ada file
+        }
+    }
     
     public function buat_tiket()
     {
         $id = $this->session->userdata('id_user');
         $data['user'] = $this->mu->get_profil($id)->row_array();
+
         $data['title'] = 'Buat Tiket';
         $data['inventory'] = $this->mu->inventory();
         $data['departemen'] = $this->mu->departemen();
+        // $data['departemen_pelapor'] = $this->mu->departemen_pelapor();
+
+        // echo "<pre>"
+        // var_dump($data);die;
 
         $this->template->load('user/template', 'user/buat_tiket', $data);
     }
@@ -335,6 +357,11 @@ class Dashboard extends CI_Controller
         $STATUS_TIKET = 7;
         $TEKNISI = $this->session->userdata('id_user');
         $tanggal = date("Y-m-d H:i:s");
+
+        $nama_pelapor = $this->input->post('nama_pelapor');
+
+        // echo "<pre>";
+        // var_dump($nama_pelapor);die;
         $data = [
             'STATUS_TIKET' => $STATUS_TIKET,
         ];
@@ -342,6 +369,7 @@ class Dashboard extends CI_Controller
             'ID_TIKET' => $ID_TIKET,
             'ID_STATUS' => $STATUS_TIKET,
             'ID_TEKNISI' => $TEKNISI,
+            'nama_pelapor'=>$nama_pelapor,
             'TANGGAL' => $tanggal
         ];
 

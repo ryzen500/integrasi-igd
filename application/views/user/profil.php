@@ -44,12 +44,12 @@
                               </div>
                             </div>
 
-                            <div class="form-group row ml-5 mr-5">
+                            <!-- <div class="form-group row ml-5 mr-5">
                               <label for="departemen" class="col-sm-2 col-form-label">Departemen<sup style="color: red;">*</sup></label>
                               <div class="col-sm-10">
                               <input type="text"readonly class="form-control" id="id_departemen" name="id_departemen" value="<?=$user['departemen']?>">
                               </div>
-                            </div>
+                            </div> -->
 
                             <div class="form-group row ml-5 mr-5">
                               <label for="no_telp" class="col-sm-2 col-form-label">No. Telepon<sup style="color: red;">*</sup></label>

@@ -23,7 +23,7 @@
               enctype="multipart/form-data">
               <!--  -->
               <div class="form-group row ml-5 mr-5">
-                <label for="id" class="col-sm-2 col-form-label">Departemen<sup style="color: red;">*</sup></label>
+                <label for="id" class="col-sm-2 col-form-label">Departemen Tujuan <sup style="color: red;">*</sup></label>
                 <div class="col-sm-10">
                   <div class="input-group ">
 
@@ -49,9 +49,12 @@
 
 
 
+
+              
+
+
               <div class="form-group row ml-5 mr-5">
                 <!-- Your existing form content here -->
-
                 <label for="file" class="col-sm-2 col-form-label">Nama Pelapor</label>
                 <div class="col-sm-5" id="file-upload-container">
                   <select id="myDropdown" class="form-control" name="nama_pelapor">
@@ -62,9 +65,21 @@
               </div>
 
 
+              <!--  -->
               <div class="form-group row ml-5 mr-5">
-                <!-- Your existing form content here -->
+                <label for="id" class="col-sm-2 col-form-label">Departemen Pelapor <sup style="color: red;">*</sup></label>
+                <div class="col-sm-10">
+                  <div class="input-group ">
 
+                    <select class="form-control input-group " id="divisi_pelapor" name="divisi_pelapor">
+                      <option>Pilih Departemen Pelapor</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="form-group row ml-5 mr-5">
                 <label for="file" class="col-sm-2 col-form-label">Data Pendukung</label>
                 <div class="col-sm-5" id="file-upload-container">
                   <input type="file" class="form-control" name="files[]" id="file-upload-0">
@@ -141,9 +156,10 @@
     $(document).ready(function () {
       let fileUploadIndex = 1; // Track the file upload count
 
-      var url = 'http://localhost/helpdesk-api-dashboard/data-dropdown.php';
+      var url = 'http://192.168.30.194/helpdesk-api-dashboard/data-dropdown.php';
       
 
+      var divisi_pelapor = '<?php echo site_url('user/Dashboard/get_departemen_pelapor') ?>';
 
       
       // Dropdown
@@ -172,6 +188,41 @@
                 }
             }
         });
+
+
+
+
+        $('#divisi_pelapor').select2({
+            placeholder: 'Masukkan  Divisi Pelapor...',
+            allowClear: true,
+            ajax: {
+                url: divisi_pelapor, // Endpoint API
+                dataType: 'json',
+                method:'POST',
+                delay: 250, // Penundaan untuk mengurangi beban server
+                data: function(params) {
+                  console.log(params.term)
+                    return {
+                        q: params.term // Mengambil parameter pencarian dari input
+                    };
+                },
+                processResults: function(data) {
+                    return {
+                        results: data.map(function(item) {
+                          console.log(item.ID_DEPARTEMEN);
+                            return {
+                                id: item.ID_DEPARTEMEN,
+                                text: item.NAMA_DEPARTEMEN // Sesuaikan dengan format data dari endpoint
+                            };
+                        })
+                    };
+                }
+            }
+        });
+
+
+
+        
       $('#add-file-upload').click(function () {
         // Create a new file input
         let newFileInput = `
@@ -195,4 +246,5 @@
         $(`#${id}`).remove(); // Remove the corresponding file input
       });
     });
+    CKEDITOR.replace('masalah'); // 'editor1' is the ID of the text area
   </script>

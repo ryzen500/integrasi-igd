@@ -1,141 +1,128 @@
-<?php $this->load->view('admin/template/header');?>
-        <!-- Content Wrapper -->
-        <div id="content-wrapper" class="d-flex flex-column">
+<?php $this->load->view('admin/template/header'); ?>
 
-            <!-- Main Content -->
-            <div id="content">
-                <!-- End of Topbar -->
-            </div>
-            <!-- Begin Page Content -->
-            <div class="container-fluid">
-
-                <!-- Page Heading -->
-                <h1 class="h3 mb-2 text-gray-800"><?php echo $ket?></h1>
-                <!-- DataTales Example -->
-                <div class="card shadow mb-4 ">
-                <div class="col-md-12">
-			</div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
-                                <div class="row">
-                                    <div class="col-sm-8 col-md-8">
-                                        <div class="dataTables_length" id="dataTables_length">
-                                            <form method="get" action="">
-                                                <div class="row">
-                                                    <div class="col-sm-3 col-md-3">
-                                                    <label>Filter Berdasarkan</label><br>
-                                                        <select name="filter" id="filter">
-                                                            <option value="">Pilih</option>
-                                                            <option value="1">Per Bulan</option>
-                                                            <option value="2">Per Tahun</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-sm-3 col-md-2" id="form-bulan">
-                                                            <label>Bulan</label><br>
-                                                            <select name="bulan">
-                                                                <option value="">Pilih</option>
-                                                                <option value="1">Januari</option>
-                                                                <option value="2">Februari</option>
-                                                                <option value="3">Maret</option>
-                                                                <option value="4">April</option>
-                                                                <option value="5">Mei</option>
-                                                                <option value="6">Juni</option>
-                                                                <option value="7">Juli</option>
-                                                                <option value="8">Agustus</option>
-                                                                <option value="9">September</option>
-                                                                <option value="10">Oktober</option>
-                                                                <option value="11">November</option>
-                                                                <option value="12">Desember</option>
-                                                            </select>
-                                                    </div>
-                                                    <div class="col-sm-3 col-md-2" id="form-tahun">
-                                                            <label>Tahun</label><br>
-                                                            <select name="tahun">
-                                                                <option value="">Pilih</option>
-                                                                <?php
-                                                                foreach($option_tahun as $data){ // Ambil data tahun dari model yang dikirim dari controller
-                                                                    echo '<option value="'.$data->tahun.'">'.$data->tahun.'</option>';
-                                                                }
-                                                                ?>
-                                                            </select>
-                                                    </div>
-                                                </div>
-                                                <br>
-                                                        <button type="submit" class="btn btn-warning">Tampilkan</button>
-                                                        <a class="btn btn-info" href="<?php echo base_url('admin/Tiket/print'); ?>">Reset Filter</a>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                                <br>
-                                <br>
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <table class="table table-bordered dataTable" id="dataTable" width="100%" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">
-                                            <thead>
-                                                <tr role="row">
-                                                    <th>No</th>
-                                                    <th>No. Tiket</th>
-                                                    <th>Departemen</th>
-                                                    <th>Tipe Masalah</th>
-                                                    <th>Keterangan Masalah</th>
-                                                    <th>Tanggal Ajuan</th>
-                                                    <th>Teknisi</th>
-                                                    <th>Status</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php
-                                                    if( ! empty($transaksi)){
-                                                        $no = 1;
-                                                        foreach($transaksi as $data){
-                                                            $idstatus = $data->STATUS_TIKET;
-                                                            if ($idstatus == 1) {
-                                                                $css = "badge badge-primary";
-                                                            } elseif ($idstatus == 2) {
-                                                                $css = "badge badge-secondary";
-                                                            } elseif ($idstatus == 3) {
-                                                                $css = "badge badge-info";
-                                                            } elseif ($idstatus == 4) {
-                                                                $css = "badge badge-success";
-                                                            } elseif ($idstatus == 6) {
-                                                                $css = "badge badge-light";
-                                                            } elseif ($idstatus == 7) {
-                                                                $css = "badge badge-light";
-                                                            }
-                                                                
-                                                                echo "<tr>";
-                                                                echo "<td>".$no++."</td>";
-                                                                echo "<td>".$data->ID_TIKET."</td>";
-                                                                echo "<td>".$data->NAMA_DEPARTEMEN."</td>";
-                                                                echo "<td>".$data->SUB_MASALAH."</td>";
-                                                                echo "<td>".$data->MASALAH."</td>";
-                                                                echo "<td>".$data->TANGGAL."</td>";
-                                                                echo "<td>".$data->nama_user."</td>";
-                                                                echo "<td>".$data->STATUS."</td>";
-                                                                echo "</tr>";
-                                                            }
-                                                        }
-                                                        ?>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- /.container-fluid -->
-            </div>
-                <!-- End of Main Content -->
-
-
+<div class="container-fluid">
+    <!-- <div class="row align-items-center" style="padding-top: 20px;">
+        <div class="col-2">
+            <img src="<?php echo base_url('assets/back/img/logo-back-preview.png'); ?>" alt="Left Logo" style="max-width: 100px;
+  width: 100px;" />
         </div>
-        <!-- End of Content Wrapper -->
-        <?php $this->load->view('admin/template/footer');?>       
-        <!-- End of Content Wrapper -->                          
-                            <script type="text/javascript">
-                                window.print();
-                            </script>
-                                                        
+        <div class="col-8 text-center">
+
+            <p style="text-align:center">
+                <span style=""> YAYASAN PELAYANAN KESEHATAN BALA KESELAMATAN (YPKBK)</span>
+                <br>
+                <span style="font-size:24px">
+                    <strong>RUMAH SAKIT "WILLIAM BOOTH"</strong>
+                </span><br>
+                <span style="">
+                    Jl. Diponegoro No. 34 Surabaya 60241, Telp. 031-5678917, Fax: 031-5624868 
+                </span>
+                <br>
+                <span>
+                    NPWP : 31.650.899.3-423.000
+                </span>
+            </p>
+
+
+            <h1 style="font-size: 24px; margin: 0;"><b><?php echo $ket; ?></b></h1>
+        </div>
+        <div class="col-2 text-right">
+            <img src="<?php echo base_url('assets/back/img/logo-right.png'); ?>" alt="Right Logo" style="max-width: 100px;
+  width: 100px;" />
+        </div>
+    </div> -->
+
+    <div class="header">
+        <table width="100%" class="headers table-header">
+
+            <!--<TD width="15%" height="50%">-->
+            <TR>
+                <TD WIDTH="20%" ALIGN="CENTER" VALIGN="MIDDLE">
+                    <div align="center">
+                        <img src="<?php echo base_url('assets/back/img/logo-back-preview.png'); ?>" class='image_report'
+                            style="float:left; max-width: 100px; width:100px;" class='image_report'>
+                    </div>
+                </TD>
+                <TD WIDTH="64%" align="center" style="text-align:center;">
+                    <div align="center" class="nama_profil" style="color: black !important; ">
+                        <p style="text-align:center"><span style="font-size:11px">YAYASAN PELAYANAN KESEHATAN BALA
+                                KESELAMATAN (YPKBK)</span></p>
+
+                        <p style="text-align:center"><span style="font-size:24px"><strong>RUMAH SAKIT &quot;WILLIAM
+                                    BOOTH&quot;</strong></span><br />
+                            <span style="font-size:10px">Jl. Diponegoro No. 34 Surabaya 60241, Telp. 031-5678917, Fax:
+                                031-5624868&nbsp;<br />
+                                NPWP : 31.650.899.3-423.000</span>
+                        </p>
+                    </div>
+                </TD>
+                <TD WIDTH="20%" ALIGN="CENTER" VALIGN="MIDDLE">
+                    <div align="center">
+                        <img src="<?php echo base_url('assets/back/img/logo-right.png'); ?>" class='image_report'
+                            style="float:left; max-width: 100px; width:100px;" class='image_report'>
+                    </div>
+                </TD>
+            </TR>
+            <tr>
+                <td colspan="3" style="border-top: 1px solid black;"></td>
+            </tr>
+            <TR>
+                <TD ALIGN=CENTER VALIGN=MIDDLE class="judul-laporan-td" colspan="3">
+                    <div align="center">
+                        <h3 style="color:black" class="judul-laporan"> <b><?= $ket ?></b></h3>
+                    </div>
+                </TD>
+            </TR>
+            <TR>
+                <TD ALIGN=CENTER VALIGN=MIDDLE class="" colspan="3">
+                    <div align="center">
+                        <font color="black"></font>
+                    </div>
+                </TD>
+            </TR>
+
+        </table>
+
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="table-responsive">
+        <table class="table table-bordered" id="dataTable" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>No. Tiket</th>
+                    <th>Departemen</th>
+                    <th>Tipe Masalah</th>
+                    <th>Keterangan Masalah</th>
+                    <th>Tanggal Ajuan</th>
+                    <th>Teknisi</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                if (!empty($transaksi)) {
+                    $no = 1;
+                    foreach ($transaksi as $data) {
+                        echo "<tr>";
+                        echo "<td>" . $no++ . "</td>";
+                        echo "<td>" . $data->ID_TIKET . "</td>";
+                        echo "<td>" . $data->NAMA_DEPARTEMEN . "</td>";
+                        echo "<td>" . $data->SUB_MASALAH . "</td>";
+                        echo "<td>" . $data->MASALAH . "</td>";
+                        echo "<td>" . $data->TANGGAL . "</td>";
+                        echo "<td>" . $data->nama_user . "</td>";
+                        echo "<td>" . $data->STATUS . "</td>";
+                        echo "</tr>";
+                    }
+                }
+                ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    window.print();
+</script>

@@ -340,6 +340,7 @@
                         // // Set interval to update chart every minute
                         // setInterval(addNewData, 60000); // 60000 milliseconds = 1 minute
                         // Chart for Diagram Lain
+                        
                         var chart2 = new CanvasJS.Chart("Diagram_lain", {
                             theme: "light1",
                             animationEnabled: true,
@@ -349,9 +350,11 @@
                             data: [{
                                 type: "pie",
                                 dataPoints: [
-                                    { label: "Kategori A", y: 20 },
-                                    { label: "Kategori B", y: 30 },
-                                    { label: "Kategori C", y: 50 },
+                                    <?php foreach ($data_perbaikan as $key => $value) { ?> {
+                                            label: "<?= $value->nama_bulan ?>",
+                                            y: <?= $value->total ?>
+                                        },
+                                    <?php } ?>
                                 ]
                             }]
                         });
@@ -514,7 +517,7 @@
 
                                             ],
                                             data: [
-                                                <?php foreach ($chart_tiket as $key => $value) { ?>                                                 <?= $value->Total ?>,
+                                                <?php foreach ($chart_tiket as $key => $value) { ?>                                                     <?= $value->Total ?>,
                                                 <?php } ?>
                                             ],
                                             backgroundColor: [
@@ -569,7 +572,7 @@
                                         datasets: [{
                                             label: 'My First Dataset',
                                             data: [
-                                                <?php foreach ($chart_teknisi as $key => $value) { ?>                                                 <?= $value->total ?>,
+                                                <?php foreach ($chart_teknisi as $key => $value) { ?>                                                     <?= $value->total ?>,
                                                 <?php } ?>
                                             ],
                                             backgroundColor: [

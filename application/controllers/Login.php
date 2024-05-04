@@ -19,18 +19,18 @@ class Login extends CI_Controller
     }
     public function validation()
     {
-        $this->form_validation->set_rules('id_user', 'No. Pegawai', 'required', ['required' => 'No. Pegawai harus diisi!']);
+        $this->form_validation->set_rules('username', 'Masukkan Username', 'required', ['required' => 'No. Pegawai harus diisi!']);
         $this->form_validation->set_rules('password_user', 'Password', 'required|trim|min_length[5]', ['required' => 'Password harus diisi!']);
-
+        
+        // var_dump($_POST);die;
         if ($this->form_validation->run() == TRUE) {
-            $id = $this->input->post('id_user', TRUE);
+            $username = $this->input->post('username', TRUE);
             $pass = $this->input->post('password_user', TRUE);
-                $query = $this->ml->cek_login($id);
+                $query = $this->ml->cek_login($username);
                 if ($query->num_rows() > 0) {
                     $row = $query->row_array();
 
                     // echo "<pre>";
-                    // var_dump($row['password_user'], $pass);die;
                     // if (password_verify($pass,$row['password_user'])) {
                     if ($pass == $row['password_user']) {
 
@@ -70,7 +70,9 @@ class Login extends CI_Controller
                     redirect('login');
                 }   
         } else {
-
+            // $errors = $this->form_validation->error_array(); // dapatkan pesan error
+            // print_r($errors); // Debug untuk melihat pesan kesalahan
+            // die;
             $this->index();
         }
     }

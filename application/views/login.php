@@ -52,8 +52,8 @@
                                     <?= $this->session->flashdata('message')?>
                                     <form class="user" method="POST" action="<?=base_url('login/validation');?>">
                                         <div class="form-group ">
-                                            <input type="text" name="id_user" class="form-control form-control-user" value="<?=set_value('id_user')?>" placeholder="No. Pegawai" > 
-                                                <?=form_error('id_user','<small class="text-danger pl-3">','</small>')?>
+                                            <input type="text" name="username" class="form-control form-control-user" value="<?=set_value('username')?>" placeholder="Masukkan Username" > 
+                                                <?=form_error('username','<small class="text-danger pl-3">','</small>')?>
                                         <div class="form-group mt-lg-3 mb-4">
                                             <input type="password" id="password" name="password_user" class="form-control form-control-user" value="<?=set_value('password_user')?>"  placeholder="Kata Sandi">
                                             <span toggle="#password" class="fa fa-fw fa-eye field-icon toggle-password"></span>

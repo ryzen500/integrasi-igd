@@ -88,8 +88,10 @@
 
                                             <td><button type="button" class="btn btn-info" data-toggle="modal"
                                                     data-target="#fileModal"
-                                                    data-id="<?= $daftartiket->ID_TIKET ?>">Detail</button></td>
-                                        </tr>
+                                                    data-id="<?= $daftartiket->ID_TIKET ?>">Detail</button>
+                                            </td>
+                                    
+                                                </tr>
                                         <?php
                                     } ?>
 

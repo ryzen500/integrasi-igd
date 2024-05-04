@@ -21,6 +21,9 @@
 
     <!-- Custom styles for this template-->
     <link href="<?= base_url()?>assets/back/css/sb-admin-2.min.css" rel="stylesheet">
+    <!-- Add CKEditor via CDN -->
+<script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
+
     <link href="<?= base_url()?>assets/back/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
     <link href="<?= base_url()?>assets/back/css/hideshow.css" rel="stylesheet">
     <link href="<?= base_url()?>assets/back/css/track.css" rel="stylesheet">
