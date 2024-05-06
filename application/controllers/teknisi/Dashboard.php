@@ -8,6 +8,7 @@ class Dashboard extends CI_Controller
 	{
 		parent::__construct();
 		$this->load->model('teknisi/M_riwayattiket', 'mt');
+		$this->load->helper('my_helper'); 
 		$this->load->model('teknisi/M_Status', 'ms');
 		$this->load->model('teknisi/M_dashboard', 'md');
 		$this->load->model('teknisi/M_tiket_teknisi', 'mteknisi');

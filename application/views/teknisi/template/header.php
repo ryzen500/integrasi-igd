@@ -21,7 +21,19 @@
     <link href="<?= base_url()?>assets/back/css/sb-admin-2.min.css" rel="stylesheet">
     <link href="<?= base_url()?>assets/back/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
     
+<style>
+    /* CSS untuk merapikan tombol-tombol */
+.button-wrapper {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
 
+.button-wrapper .btn {
+    margin-right: 10px; /* Memberi sedikit ruang antara tombol */
+}
+
+</style>
 
 </head>
 
