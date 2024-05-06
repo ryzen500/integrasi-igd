@@ -37,7 +37,7 @@
                                             Masuk
                                         </button>
                                         </div>
-                                       <p class="ml-3">Jika selama dalam kurun waktu jam kerja , silakan anda hubungi <b style="color:#1E90FF;">2006</b></p> 
+                                       <p class="ml-3">Jika selama dalam kurun waktu jam kerja , silakan anda menghubungi telepon  <b style="color:#1E90FF;">2006 & 6031</b></p> 
                                        <!-- <p class="ml-3"><a href="<?=site_url('registration');?>">Jika anda ingin mendaftarkan akun anda, silakan Mendaftar </a></p>  -->
 
                                        <div>
