@@ -14,7 +14,7 @@ class Register extends CI_Controller
     {
         sudah_login();
         $data['title'] = 'Register';
-        $data['judul'] = 'Helpdesk RSWB Surabaya';
+        $data['judul'] = 'IGD RSWB Surabaya';
         $this->template->load('auth/template_auth', 'auth/registration', $data);
     }
     public function validation()

@@ -23,8 +23,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-// $config['base_url'] = 'http://localhost/helpdesk/';
-$config['base_url'] = 'http://192.168.30.194/helpdesk/';
+$config['base_url'] = 'http://localhost/igd-revamp/';
+// $config['base_url'] = 'http://192.168.30.194/helpdesk/';
 
 /*
 |--------------------------------------------------------------------------

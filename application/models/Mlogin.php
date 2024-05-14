@@ -10,7 +10,7 @@ class Mlogin extends CI_Model
 
         $this->db->from('user u');
         $this->db->where('username', $username);
-        $this->db->join('departemen d', 'd.id_departemen=d.id_departemen');
+        $this->db->join('departemen d', 'u.id_departemen=d.id');
         $this->db->select('u.*, d.nama_departemen AS departemen');
         return $this->db->get_where();
     }

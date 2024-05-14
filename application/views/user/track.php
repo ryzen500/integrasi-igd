@@ -28,165 +28,504 @@
             <form method="POST" action="<?= base_url('user/Dashboard/track'); ?>">
 
               <div class="ml-5 mr-5">
-                <div class="btn btn-danger mb-3 mt-3"><?= date('l, d M Y', strtotime($track_user->tanggal_pengajuan)) ?>
-                </div>
-              </div>
-              <div class="order-track-step ml-5 mr-5">
-                <div class="order-track-status">
-                  <span class="order-track-status-dot fas fa-check-circle fa-2xl ml-1"
-                    style="color:blue !important"></span>
-                  <span class="order-track-status-line"></span>
-                </div>
-                <div class="order-track-text">
-                  <div class="pd bg-white border shad">
-                    <div class="nama"><?= !empty($track_user->nama_pelapor) ? $track_user->nama_pelapor : "-" ?> <br>
-                      Dari
-                      Ruangan (<?= $track_user->user ?> )</div>
-                    <div class="status"><?= "Tiket Masuk" ?></div>
-                    <i class="fas fa-clock clock"></i>
-                    <div class="jam"><?= date('H:i:s', strtotime($track_user->tanggal_pengajuan)) ?></div>
-                    <i class="far fa-calendar-alt calendar"></i>
-                    <div class="waktu"><?= date('d-M-Y', strtotime($track_user->tanggal_pengajuan)) ?></div>
-                    <div></div>
-                  </div>
-                </div>
-              </div>
 
-              <?php
-              foreach ($track as $value) {
 
-                ?>
-                <div class="order-track-step ml-5 mr-5">
-                  <div class="order-track-status">
-                    <span class="order-track-status-dot fas fa-check-circle fa-2xl ml-1"
-                      style="color:blue !important"></span>
-                    <span class="order-track-status-line"></span>
-                  </div>
-                  <div class="order-track-text">
-                    <div class="pd bg-white border shad">
 
-                      <div class="nama">
-                        <?= !empty($value->nama_pelapor) ? $value->nama_pelapor . " <br> Dari Ruangan (" . $value->nama_teknisi . ")" : $value->nama_teknisi ?>
-                      </div>
-                      <div class="status"><?= $value->status ?></div>
-                      <i class="fas fa-clock clock"></i>
-                      <div class="jam"><?= date('H:i:s', strtotime($value->TANGGAL)) ?></div>
-                      <i class="far fa-calendar-alt calendar"></i>
-                      <div class="waktu"><?= date('d-M-Y', strtotime($value->TANGGAL)) ?></div>
+                <form method="POST" action="<?= site_url('user/Dashboard/buat_tiket_action'); ?>" enctype="multipart/form-data">
+                  <?php foreach ($track_user as $key => $track_users) {
+                    # code...
+                  ?>
+                    <table >
+                      <tr>
+                        <td style="width: 200px; padding-top: 7px;">
+                          <label for="file" style="text-align: center;">Nomor Rekam Medik</label>
+                        <td style="width: 500px; padding-left:8px;">
+                          <?php echo $track_users->no_rekam_medik ?>
+                        </td>
+                        </td>
+                        <td style="width: 100px;padding-top: 7px;">
+                          <label for="file">Tanggal MRS</label>
+                        <td style="width: 200px; padding-left:8px;">
+                          <?php echo date("Y-m-d", strtotime($track_users->tanggal_jam_pasien_masuk));  ?>
+                        </td>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="width: 100px;padding-top: 7px;">
+                          <label for="file">Nama Pasien</label>
+                        <td style="width: 200px;" style="padding-bottom:5px;padding-left:8px;">
+                          <?php echo $track_users->nama_pasien;  ?>
+                        </td>
+                        </td>
+                        <td style="width: 100px;padding-top: 7px;">
+                          <label for="file">Dokter Jaga IGD</label>
+                        <td style="width: 200px;" style="padding-bottom:5px;padding-left:8px;">
+                          <?php echo $track_users->dokter_jaga_igd;  ?>
+                        </td>
+                        </td>
+                      </tr>
+
+                      <!-- Space -->
+                      <tr>
+                        <td style="width: 100px;padding-top: 7px;">
+                          <label for="file"></label>
+                        <td style="width: 200px;" style="padding-bottom:5px">
+                          <?php ?>
+                        </td>
+                        </td>
+                        <td style="width: 100px;padding-top: 7px;">
+                          <label for="file"></label>
+                        <td style="width: 200px;" style="padding-bottom:5px">
+                          <?php echo "" ?>
+                        </td>
+                        </td>
+                      </tr>
+                      <!-- Space -->
+                      <tr>
+                        <td style="width: 100px;padding-top: 7px;">
+                          <label for="file">Diagnosa</label>
+                        <td style="width: 200px;" style="padding-bottom:5px">
+                          <?php echo $track_users->diagnosa_primer;  ?>
+                        </td>
+                        </td>
+                        <td style="width: 100px;padding-top: 7px;">
+                          <label for="file"></label>
+                        <td style="width: 200px;" style="padding-bottom:5px">
+                          <?php echo "";  ?>
+                        </td>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="width: 100px;height:100px; padding-top: 7px;">
+                          <label for="file">Diagnosa Tambahan</label>
+                        <td style="width: 200px;" style="padding-bottom:5px">
+                          <?php echo $track_users->diagnosa_tambahan;  ?>
+                        </td>
+                        </td>
+                        <td style="width: 100px;padding-top: 7px;">
+                          <label for="file"></label>
+                        <td style="width: 200px;" style="padding-bottom:5px">
+                          <?php echo "";  ?>
+                        </td>
+                        </td>
+                      </tr>
+                      <!-- Space -->
+                      <tr>
+                        <td style="width: 100px;padding-top: 7px;">
+                          <label for="file"></label>
+                        <td style="width: 200px;" style="padding-bottom:5px">
+                          <?php ?>
+                        </td>
+                        </td>
+                        <td style="width: 100px;padding-top: 7px;">
+                          <label for="file"></label>
+                        <td style="width: 200px;" style="padding-bottom:5px">
+                          <?php echo "" ?>
+                        </td>
+                        </td>
+                      </tr>
+                      <!-- Space -->
+                      <tr>
+                        <td style="width: 100px;height:100px; padding-top: 7px;">
+                          <label for="file">Diagnosa Sekunder</label>
+                        <td style="width: 200px;" style="padding-bottom:5px">
+                          <?php echo $track_users->diagnosa_sekunder;  ?>
+                        </td>
+                        </td>
+                        <td style="width: 100px;padding-top: 7px;">
+                          <label for="file"></label>
+                        <td style="width: 200px;" style="padding-bottom:5px">
+                          <?php echo "";  ?>
+                        </td>
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td style="width: 100px;padding-top: 7px;">
+                          <label for="file">Tekanan Darah</label>
+                        <td style="width: 200px;" style="padding-bottom:5px;padding-left:8px;">
+                          <?php echo $track_users->tekanan_darah;  ?>
+                        </td>
+                      <tr>
+                        <td style="width: 100px;padding-top: 7px;">
+                          <label for="file">Detak Nadi</label>
+                        <td style="width: 200px;" style="padding-bottom:5px;padding-left:8px;">
+                          <?php echo $track_users->detak_nadi;  ?>
+                        </td>
+                        </td>
+                      </tr>
+                      </td>
+                      <td style="width: 100px;padding-top: 7px;">
+                        <label for="file">Pernafasan</label>
+                      <td style="width: 200px;" style="padding-bottom:5px;padding-left:8px;">
+                        <?php echo $track_users->pernafasan;  ?>
+                      </td>
+                      </td>
+                      <tr>
+
+                        <td style="width: 100px;padding-top: 7px;">
+                          <label for="file">Suhu Tubuh</label>
+                        <td style="width: 200px;" style="padding-bottom:5px;padding-left:8px;">
+                          <?php echo $track_users->suhu_tubuh;  ?>
+                        </td>
+                        </td>
+                      </tr>
+                      <tr>
+
+                        <td style="width: 100px;padding-top: 7px;">
+                          <label for="file">Tinggi badan</label>
+                        <td style="width: 200px;" style="padding-bottom:5px;padding-left:8px;">
+                          <?php echo $track_users->tinggi_badan;  ?>
+                        </td>
+                        </td>
+
+                      </tr>
+
+                      <tr>
+
+                        <td style="width: 100px;padding-top: 7px;">
+                          <label for="file">Berat badan</label>
+                        <td style="width: 200px;" style="padding-bottom:5px;padding-left:8px;">
+                          <?php echo $track_users->berat_badan;  ?>
+                        </td>
+                        </td>
+                      </tr>
+
+
+                      <tr>
+
+                        <td style="width: 100px;padding-top: 7px;">
+                          <label for="file">GCS</label>
+                        <td style="width: 200px;" style="padding-bottom:5px;padding-left:8px;">
+                          <?php echo $track_users->GCS;  ?>
+                        </td>
+                        </td>
+                      </tr>
+
+
+                      <tr>
+
+                        <td style="width: 100px;padding-top: 7px;">
+                          <label for="file">Lingkar Kepala (LK) </label>
+                        <td style="width: 200px;" style="padding-bottom:5px;padding-left:8px;">
+                          <?php echo $track_users->LK;  ?>
+                        </td>
+                        </td>
+
+                      </tr>
+
+                      <tr>
+
+                        <td style="width: 100px;padding-top: 7px;">
+                          <label for="file">Lingkar Lengan (LL)</label>
+                        <td style="width: 200px;" style="padding-bottom:5px;padding-left:8px;">
+                          <?php echo $track_users->LL;  ?>
+                        </td>
+                        </td>
+                      </tr>
+
+
+                      <tr>
+
+                        <td style="width: 100px;padding-top: 7px;">
+                          <label for="file">Lingkar Dada (LD) </label>
+                        <td style="width: 200px;" style="padding-bottom:5px;padding-left:8px;">
+                          <?php echo $track_users->LD;  ?>
+                        </td>
+                        </td>
+                      </tr>
+                      <!-- keluar -->
+
+
+
+                      <!-- Space -->
+                      <tr>
+                        <td style="width: 100px;padding-top: 7px;">
+                          <label for="file"></label>
+                        <td style="width: 200px;" style="padding-bottom:5px">
+                          <?php ?>
+                        </td>
+                        </td>
+                        <td style="width: 100px;padding-top: 7px;">
+                          <label for="file"></label>
+                        <td style="width: 200px;" style="padding-bottom:5px">
+                          <?php echo "" ?>
+                        </td>
+                        </td>
+                      </tr>
+                      <!-- Space -->
+                      <tr>
+                        <td style="width: 100px;padding-top: 7px;">
+                          <label for="file">Keluhan Utama</label>
+                        <td style="width: 200px;" style="padding-bottom:5px">
+                          <?php echo $track_users->keluhan_utama;  ?>
+                        </td>
+                        </td>
+                        <td style="width: 100px;padding-top: 7px;">
+                          <label for="file"></label>
+                        <td style="width: 200px;" style="padding-bottom:5px">
+                          <?php echo "";  ?>
+                        </td>
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td style="width: 100px;padding-top: 7px;">
+                          <label for="file">Anamnesis</label>
+                        <td style="width: 200px;" style="padding-bottom:5px">
+                          <?php echo $track_users->anamnesis;  ?>
+                        </td>
+                        </td>
+                        <td style="width: 100px;padding-top: 7px;">
+                          <label for="file"></label>
+                        <td style="width: 200px;" style="padding-bottom:5px">
+                          <?php echo "";  ?>
+                        </td>
+                        </td>
+                      </tr>
+
+
+
+                      <tr>
+                        <td style="width: 100px;padding-top: 7px;">
+                          <label for="file">Riwayat Penyakit Dahulu</label>
+                        <td style="width: 200px;" style="padding-bottom:5px">
+                          <?php echo $track_users->riwayatpenyakit_terdahulu;  ?>
+                        </td>
+                        </td>
+                        <td style="width: 100px;padding-top: 7px;">
+                          <label for="file"></label>
+                        <td style="width: 200px;" style="padding-bottom:5px">
+                          <?php echo "";  ?>
+                        </td>
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td style="width: 100px;padding-top: 7px;">
+                          <label for="file">Riwayat Alergi Obat</label>
+                        <td style="width: 200px;" style="padding-bottom:5px">
+                          <?php echo $track_users->riwayat_alergi_obat;  ?>
+                        </td>
+                        </td>
+                        <td style="width: 100px;padding-top: 7px;">
+                          <label for="file"></label>
+                        <td style="width: 200px;" style="padding-bottom:5px">
+                          <?php echo "";  ?>
+                        </td>
+                        </td>
+                      </tr>
+
+
+
+                      <tr>
+                        <td style="width: 100px;padding-top: 7px;">
+                          <label for="file">Riwayat Alergi Makanan</label>
+                        <td style="width: 200px;" style="padding-bottom:5px">
+                          <?php echo $track_users->riwayat_alergi_makanan;  ?>
+                        </td>
+                        </td>
+                        <td style="width: 100px;padding-top: 7px;">
+                          <label for="file"></label>
+                        <td style="width: 200px;" style="padding-bottom:5px">
+                          <?php echo "";  ?>
+                        </td>
+                        </td>
+                      </tr>
+
+
+
+                      <tr>
+                        <td style="width: 100px;height:100px; padding-top: 7px;">
+                          <label for="file">Tindakan Medis</label>
+                        <td style="width: 200px;" style="padding-bottom:5px">
+                          <?php echo $track_users->tindakan_medis;  ?>
+                        </td>
+                        </td>
+                        <td style="width: 100px;padding-top: 7px;">
+                          <label for="file"></label>
+                        <td style="width: 200px;" style="padding-bottom:5px">
+                          <?php echo "";  ?>
+                        </td>
+                        </td>
+                      </tr>
+
+
+
+                      <tr>
+                        <td style="width: 100px;height:100px; padding-top: 7px;">
+                          <label for="file">Konsultasi Dokter Medis</label>
+                        <td style="width: 200px;" style="padding-bottom:5px">
+                          <?php echo $track_users->konsultasi_dokter_spesialis;  ?>
+                        </td>
+                        </td>
+                        <td style="width: 100px;padding-top: 7px;">
+                          <label for="file"></label>
+                        <td style="width: 200px;" style="padding-bottom:5px">
+                          <?php echo "";  ?>
+                        </td>
+                        </td>
+                      </tr>
+
+
+                      <tr>
+                        <td style="width: 100px;height:100px; padding-top: 7px;">
+                          <label for="file">Tindakan Di IGD</label>
+                        <td style="width: 200px;" style="padding-bottom:5px">
+                          <?php echo $track_users->tindakan_di_igd;  ?>
+                        </td>
+                        </td>
+                        <td style="width: 100px;padding-top: 7px;">
+                          <label for="file"></label>
+                        <td style="width: 200px;" style="padding-bottom:5px">
+                          <?php echo "";  ?>
+                        </td>
+                        </td>
+                      </tr>
+                      
+
+                      <tr>
+                        <td style="width: 100px;height:100px; padding-top: 7px;">
+                          <label for="file">Keterangan</label>
+                        <td style="width: 200px;" style="padding-bottom:5px">
+                          <?php echo $track_users->keterangan;  ?>
+                        </td>
+                        </td>
+                        <td style="width: 100px;padding-top: 7px;">
+                          <label for="file"></label>
+                        <td style="width: 200px;" style="padding-bottom:5px">
+                          <?php echo "";  ?>
+                        </td>
+                        </td>
+                      </tr>
+
+
+
+
+                      <tr>
+                        <td style="width: 100px;height:100px; padding-top: 7px;">
+                          <label for="file">Jam Pindah</label>
+                        <td style="width: 200px;" style="padding-bottom:5px">
+                          <?php echo $track_users->jam_pindah;  ?>
+                        </td>
+                        </td>
+                        <td style="width: 100px;padding-top: 7px;">
+                          <label for="file"></label>
+                        <td style="width: 200px;" style="padding-bottom:5px">
+                          <?php echo "";  ?>
+                        </td>
+                        </td>
+                      </tr>
+
+
+
+                      </tr>
+
+                      <!-- Sisipkan baris dan kolom tabel untuk setiap elemen form yang Anda miliki -->
+                    </table>
+                  <?php }  ?>
+                  <!-- Sisipkan tombol submit dan reset di luar tabel -->
+                  <div class="form-group row justify-content-end ml-5">
+                    <div class="col-sm-10">
+                      <button type="button" class="btn btn-primary">Print</button>
+                      <button type="reset" class="btn btn-danger">Back</button>
                     </div>
                   </div>
-                </div>
-              <?php } ?>
-              <div class="order-track-step ml-5 mr-5">
-                <div class="order-track-status">
-                  <span class="order-track-status-dot fas fa-circle fa-2xl ml-1" style="color:grey !important"></span>
+                </form>
 
-                  <?php if ($track_user->STATUS_TIKET != 7) {
-                    echo "";
-                  } else {
-                    echo "<span class=\"order-track-status-line\"></span>";
-
-                  } ?>
-                </div>
+                <!-- <div class="btn btn-danger mb-3 mt-3"><?= date('l, d M Y', strtotime($track_userss->tanggal_jam_pasien_masuk)) ?> -->
               </div>
-
-              <?php
-              if ($track_user->STATUS_TIKET == 4) {
-                echo "<div class=\"form-group row ml-5 mr-5\">";
-                // echo "<a href=" . site_url('user/Dashboard/konfirmasi/' . $track_user->ID_TIKETS) . " class=\"btn btn-info\">Konfirmasi</a>";
-                ?>
-                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#confirmationModal">
-                  Konfirmasi
-                </button>
-              <?php } elseif (($track_user->STATUS_TIKET == 7)) {
-                echo "<div class=\"btn btn-dark disabled form-group row ml-5 mt-3\">";
-                echo "Sudah Dikonfirmasi";
-              } else {
-                echo "<div class=\"btn btn-warning disabled form-group row ml-5\">";
-                echo "Dalam Progress";
-              }
-
-              ?>
-          </div>
-
-
-
-          </form>
-
-        </div>
-
-      </div>
-      <!-- /.container-fluid -->
-
-      <!-- End of Main Content -->
-
-      <div class="modal fade" id="confirmationModal" >
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="modalLabel">Konfirmasi Tiket</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
+              <button type="button" class="btn btn-info" data-toggle="modal" data-target="#confirmationModal">
+                Konfirmasi
               </button>
-            </div>
-            <form method="POST" action="<?= site_url('user/Dashboard/konfirmasi/' . $track_user->ID_TIKETS) ?>">
-              <div class="modal-body">
-                <label class=" col-form-label">User Pengkonfirmasi</label>
-
-                <select id="myDropdown2" class="form-control" name="nama_pelapor">
-                  <option value="">--Pilih opsi--</option>
-                </select>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                <button type="submit" class="btn btn-info">Simpan</button>
-              </div>
-            </form>
           </div>
-        </div>
-      </div>
 
+
+
+        </div>
+
+
+
+        </form>
+
+      </div>
 
     </div>
-    <!-- End of Content Wrapper -->
+    <!-- /.container-fluid -->
+
+    <!-- End of Main Content -->
+
+    <div class="modal fade" id="confirmationModal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalLabel">Konfirmasi Tiket</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form method="POST" action="<?= site_url('user/Dashboard/konfirmasi/' . $track_users->ID_TIKETS) ?>">
+            <div class="modal-body">
+              <label class=" col-form-label">User Pengkonfirmasi</label>
+
+              <select id="myDropdown2" class="form-control" name="nama_pelapor">
+                <option value="">--Pilih opsi--</option>
+              </select>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+              <button type="submit" class="btn btn-info">Simpan</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
 
   </div>
-  <!-- End of Page Wrapper -->
+  <!-- End of Content Wrapper -->
 
-  <!-- Scroll to Top Button-->
-  <a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-  </a>
+</div>
+<!-- End of Page Wrapper -->
 
-  <script>
-// Tangkap acara klik pada tombol yang membuka modal
-$('#confirmButton').on('click', function() {
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+  <i class="fas fa-angle-up"></i>
+</a>
+
+<script>
+  // Tangkap acara klik pada tombol yang membuka modal
+  $('#confirmButton').on('click', function() {
     // Buka modal ketika tombol diklik
     $('#confirmationModal').modal('show');
-});
+  });
 
-// Menginisialisasi Select2 saat modal ditampilkan
-$('#confirmationModal').on('shown.bs.modal', function () {
+  // Menginisialisasi Select2 saat modal ditampilkan
+  $('#confirmationModal').on('shown.bs.modal', function() {
     $('#myDropdown2').select2({
-        placeholder: 'Masukkan Nama Pelapor...',
-        allowClear: true,
-        ajax: {
-            url: 'http://192.168.30.194/helpdesk-api-dashboard/data-dropdown.php',
-            dataType: 'json',
-            delay: 250,
-            data: function (params) {
-                return { q: params.term };
-            },
-            processResults: function (data) {
-                return {
-                    results: data.map(function (item) {
-                        return { id: item.name, text: item.name };
-                    })
-                };
-            },
-            cache: true
-        }
+      placeholder: 'Masukkan Nama Pelapor...',
+      allowClear: true,
+      ajax: {
+        url: 'http://192.168.30.194/helpdesk-api-dashboard/data-dropdown.php',
+        dataType: 'json',
+        delay: 250,
+        data: function(params) {
+          return {
+            q: params.term
+          };
+        },
+        processResults: function(data) {
+          return {
+            results: data.map(function(item) {
+              return {
+                id: item.name,
+                text: item.name
+              };
+            })
+          };
+        },
+        cache: true
+      }
     });
-});
-
-  </script>
+  });
+</script>

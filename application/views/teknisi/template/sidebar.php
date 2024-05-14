@@ -4,7 +4,7 @@
             <!-- Sidebar - Brand -->
             <div class="sidebar-brand d-flex align-items-center justify-content-center">
         <img style="height:40px ;" src="<?= base_url('assets/back') ?>/img/logo-back-preview.png" alt="">
-        <div class="sidebar-brand-text">Helpdesk RSWB Surabaya</div>    </div>
+        <div class="sidebar-brand-text">IGD RSWB Surabaya</div>    </div>
 
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
@@ -39,7 +39,7 @@
             <footer class="sticky-footer" style="margin-top: 100%;">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; helpdesk RSWB Surabaya <?php echo date('Y'); ?></span>
+                        <span>Copyright &copy; IGD RSWB Surabaya <?php echo date('Y'); ?></span>
                     </div>
                 </div>
             </footer>

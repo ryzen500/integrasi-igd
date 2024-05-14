@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>helpdesk RSWB Surabaya - Beranda</title>
+    <title>IGD RSWB Surabaya - Beranda</title>
     <script src="https://kit.fontawesome.com/5ab7515e8e.js" crossorigin="anonymous"></script>
     <!-- Custom fonts for this template-->
     <link href="<?= base_url() ?>assets/back/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">

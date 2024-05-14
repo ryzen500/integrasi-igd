@@ -14,7 +14,7 @@ class Login extends CI_Controller
     {
         sudah_login();
         $data['title'] = 'Masuk';
-        $data['judul'] = 'Helpdesk RSWB Surabaya';
+        $data['judul'] = 'Rekap IGD Surabaya';
         $this->template->load('auth/template_auth', 'auth/login', $data);
     }
     public function validation()

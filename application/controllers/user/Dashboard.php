@@ -25,7 +25,7 @@ class Dashboard extends CI_Controller
         $id = $this->session->userdata('id_user');
         // var_dump($this->session->userdata('nama_user'));die;
         $data['user'] = $this->mu->get_profil($id)->row_array();
-        $data['title'] = ' Tiket Saya';
+        $data['title'] = ' Data Saya';
         $data['tiket'] = $this->mu->tiket_user();
         $this->template->load('user/template', 'user/page', $data);
     }
@@ -46,44 +46,15 @@ class Dashboard extends CI_Controller
     }
 
 
-    public function get_files() {
-        $tiket_id = $this->input->post('id');
-    
-        // Query untuk mendapatkan daftar file dari database
-        $file_list = $this->db->get_where('uploaded_files', array('ID_TIKET' => $tiket_id))->result();
-    
-        if ($file_list) {
-            echo json_encode($file_list); // Kembalikan daftar file dalam format JSON
-        } else {
-            echo json_encode([]); // Kembalikan daftar kosong jika tidak ada file
-        }
-    }
-
-    public function get_departemen_pelapor() {
-       
-
-        $query = !empty($this->input->post('q', true)) ? $this->input->post('q', true) : null;
-
-        // $query =  !empty($this->input->post('q',true) ? $this->input->post('q',true) : null);
-        // var_dump($query);
-        // $query="farmasi";
-        $file_list = $this->mu->departemen_pelapor($query);
-        
-        if ($file_list) {
-            echo json_encode($file_list); // Kembalikan daftar file dalam format JSON
-        } else {
-            echo json_encode([]); // Kembalikan daftar kosong jika tidak ada file
-        }
-    }
     
     public function buat_tiket()
     {
         $id = $this->session->userdata('id_user');
         $data['user'] = $this->mu->get_profil($id)->row_array();
 
-        $data['title'] = 'Buat Tiket';
-        $data['inventory'] = $this->mu->inventory();
-        $data['departemen'] = $this->mu->departemen();
+        $data['title'] = 'Buat Data';
+        // $data['inventory'] = $this->mu->inventory();
+        // $data['departemen'] = $this->mu->departemen();
         // $data['departemen_pelapor'] = $this->mu->departemen_pelapor();
 
         // echo "<pre>"
@@ -157,105 +128,92 @@ class Dashboard extends CI_Controller
 
     // }
 
-
     public function buat_tiket_action()
     {
         // Form validation rules
-        $this->form_validation->set_rules('masalah', 'Nama Masalah', 'trim|required', ['required' => 'Masalah Wajib Diisi !!!']);
+        $this->form_validation->set_rules('nomor_rekam_medik', 'Nomor Rekam Medik', 'trim|required');
+        // Tambahkan aturan validasi sesuai kebutuhan untuk setiap field
         
-        // echo "<pre>";
-        // var_dump($_POST);die;
         if ($this->form_validation->run() == TRUE) {
+    
+            // Ambil data dari $_POST
+            $nomor_rekam_medik = $this->input->post('nomor_rekam_medik');
+            $no_pendaftaran = $this->input->post('no_pendaftaran');
 
-            // Generate a unique id_tiket
-            $masalah = strip_tags($this->input->post('masalah'));
-            $id_user = htmlspecialchars($this->input->post('id_user'), ENT_QUOTES, 'UTF-8');
-            $id_inventory = htmlspecialchars($this->input->post('id_inventory'), ENT_QUOTES, 'UTF-8');
-            $nama_pelapor = htmlspecialchars($this->input->post('nama_pelapor'), ENT_QUOTES, 'UTF-8');
-            $divisi_pelapor = htmlspecialchars($this->input->post('divisi_pelapor'), ENT_QUOTES, 'UTF-8');
-            
-            $tanggal = date("Y-m-d H:i:s");
-            $STATUS_TIKET = 1;
-            $tiket = "T-" . date("Ymd") . rand(999, 111);
-            // Create the data array for the "tiket" table
-            $datas = array(
-                'masalah' => $masalah,
-                'id_user' => $id_user,
-                'tanggal' => $tanggal,
-                'id_tiket' => $tiket,
-                'STATUS_TIKET' => $STATUS_TIKET,
-                'id_inventory' => $id_inventory,
-                'nama_pelapor'=>$nama_pelapor,
-                'divisi_pelapor'=>$divisi_pelapor
+            $dokter_jaga_igd = $this->input->post('dokter_jaga_igd');
+            $tanggal_mrs = $this->input->post('tanggal_mrs');
+            $nama_pasien = $this->input->post('nama_pasien');
+            $tanggal_lahir_pasien = $this->input->post('tanggal_lahir_pasien');
+            $diagnosa_primer = $this->input->post('diagnosa_primer');
+            $diagnosa_tambahan = $this->input->post('diagnosa_tambahan');
+            $diagnosa_sekunder = $this->input->post('diagnosa_sekunder');
+            $tekanan_darah = $this->input->post('tekanan_darah');
+            $detak_nadi = $this->input->post('detak_nadi');
+            $pernafasan = $this->input->post('pernafasan');
+            $suhu_tubuh = $this->input->post('suhu_tubuh');
+            $tinggi_badan = $this->input->post('tinggi_badan');
+            $berat_badan = $this->input->post('berat_badan');
+            $GCS = $this->input->post('GCS');
+            $LK = $this->input->post('LK');
+            $LL = $this->input->post('LL');
+            $LD = $this->input->post('LD');
+            $keluhan_utama = $this->input->post('keluhan_utama');
+            $anamnesis = $this->input->post('anamnesis');
+            $riwayat_penyakit_dahulu = $this->input->post('riwayat_penyakit_dahulu');
+            $riwayat_alergi_obat = $this->input->post('riwayat_alergi_obat');
+            $riwayat_alergi_makanan = $this->input->post('riwayat_alergi_makanan');
+            $tindakan_medis = $this->input->post('tindakan_medis');
+            $konsultasi_dokter_spesialis = $this->input->post('konsultasi_dokter_spesialis');
+            $tindakan_di_igd = $this->input->post('tindakan_di_igd');
+            $keterangan = $this->input->post('keterangan');
+            $jam_pindah = $this->input->post('jam_pindah');
+            $id_user = $this->input->post('id_user');
+    
+            // Buat array untuk disimpan ke dalam database
+            $data = array(
+                'no_rekam_medik' => $nomor_rekam_medik,
+                'no_pendaftaran'=>$no_pendaftaran,
+                'tanggal_jam_pasien_masuk' => $tanggal_mrs,
+                'nama_pasien' => $nama_pasien,
+                'dokter_jaga_igd'=>$dokter_jaga_igd,
+                'tanggal_lahir_pasien' => $tanggal_lahir_pasien,
+                'diagnosa_primer' => $diagnosa_primer,
+                'diagnosa_tambahan' => $diagnosa_tambahan,
+                'diagnosa_sekunder' => $diagnosa_sekunder,
+                'tekanan_darah' => $tekanan_darah,
+                'detak_nadi' => $detak_nadi,
+                'pernafasan' => $pernafasan,
+                'suhu_tubuh' => $suhu_tubuh,
+                'tinggi_badan' => $tinggi_badan,
+                'berat_badan' => $berat_badan,
+                'GCS' => $GCS,
+                'LK' => $LK,
+                'LL' => $LL,
+                'LD' => $LD,
+                'keluhan_utama' => $keluhan_utama,
+                'anamnesis' => $anamnesis,
+                'riwayat_penyakit_dahulu' => $riwayat_penyakit_dahulu,
+                'riwayat_alergi_obat' => $riwayat_alergi_obat,
+                'riwayat_alergi_makanan' => $riwayat_alergi_makanan,
+                'tindakan_medis' => $tindakan_medis,
+                'konsultasi_dokter_spesialis' => $konsultasi_dokter_spesialis,
+                'tindakan_di_igd' => $tindakan_di_igd,
+                'keterangan' => $keterangan,
+                'jam_pindah' => $jam_pindah,
+                'id_user' => $id_user
             );
-
-
-            // Insert into the "tiket" table
-            $this->mu->insert($datas, 'tiket'); // Assuming `mu` is a model for handling "tiket"
-
-            // File upload configuration
-            $config['upload_path'] = './uploads/';
-            $config['allowed_types'] = 'jpg|jpeg|png|gif|pdf|docx|xlsx';
-            $config['max_size'] = 5120;  // Maximum 5 MB
-            $this->upload->initialize($config);
-            $this->load->library('upload', $config);
-
-            // echo "<pre>";
-            // if (!$this->upload->do_upload('files')) {
-            //     $error = $this->upload->display_errors(); // Get the error message
-            //     var_dump($error); // Display the error message for debugging
-            // } else {
-            //     $data = $this->upload->data(); // Get the uploaded file data
-            //     var_dump($data); // Display the uploaded file data
-            // }
-            // die;
-            $uploaded_files = [];
-            $upload_errors = [];
-
-            // Check if any files were uploaded
-            if (!empty($_FILES['files']['name'][0])) {
-                foreach ($_FILES['files']['name'] as $key => $file_name) {
-                    // Set up the file attributes
-                    $_FILES['file']['name'] = $_FILES['files']['name'][$key];
-                    $_FILES['file']['type'] = $_FILES['files']['type'][$key];
-                    $_FILES['file']['tmp_name'] = $_FILES['files']['tmp_name'][$key];
-                    $_FILES['file']['error'] = $_FILES['files']['error'][$key];
-                    $_FILES['file']['size'] = $_FILES['files']['size'][$key];
-
-                    if ($this->upload->do_upload('file')) {
-                        // Get file upload data
-                        $upload_data = $this->upload->data();
-                        $uploaded_files[] = $upload_data;
-
-                        // Prepare file data to insert into the database
-                        $file_info = array(
-                            'id_tiket' => $datas['id_tiket'],  // Link with the ticket ID
-                            'file_name' => $upload_data['file_name'],
-                            'file_path' => $upload_data['full_path'],
-                            'file_type' => $upload_data['file_type'],
-                            'file_size' => $upload_data['file_size'],
-                            'uploaded_at' => date("Y-m-d H:i:s")
-                        );
-
-                        // Insert into the `uploaded_files` table
-                        $this->fm->insert_file($file_info); // Assuming `fm` is the File Model
-                    } else {
-                        $upload_errors[] = $this->upload->display_errors();
-                    }
-                }
-            }
-
-            // Pass the results to a view or handle accordingly
-            $data['uploaded_files'] = $uploaded_files;
-            $data['upload_errors'] = $upload_errors;
-
-            // Redirect after success
+    
+            // Insert data ke dalam database
+            $this->db->insert('laporan_rekap', $data);
+    
+            // Redirect setelah berhasil insert data
             redirect('user/Dashboard');
         } else {
-            // validation_errors(); 
-            $this->buat_tiket();  // If validation fails, go back to the ticket creation form
+            // Jika validasi gagal, kembali ke form pembuatan tiket
+            $this->buat_tiket();
         }
     }
+    
 
 
 
@@ -366,13 +324,55 @@ class Dashboard extends CI_Controller
         }
     }
 
-    public function track($ID_TIKET)
+    public function track($id)
     {
-        $data['title'] = 'Riwayat Aktivitas';
-        $data['track'] = $this->mu->track($ID_TIKET);
-        $data['track_user'] = $this->mu->track_user($ID_TIKET);
+        $data['title'] = 'Detail';
+        $data['track'] = $this->mu->track($id);
+        $data['track_user'] = $this->mu->track_user($id);
         $this->template->load('user/template', 'user/track', $data);
     }
+
+    		public function edit($id)
+		{
+			// $data['departemen'] = $this->mde->getAll();
+			$data['title'] ="Edit Data";
+            $data['laporan_rekap'] = $this->mu->track_user($id);
+			$this->template->load('user/template','user/edit_tiket',$data);
+		}
+
+		public function update(){
+			$ID_INVENTORY = $this->input->post('ID_INVENTORY');
+			$NAMA_INVENTORY = $this->input->post('NAMA_INVENTORY');
+			$ID_DEPARTEMEN = $this->input->post('ID_DEPARTEMEN');
+			$STATUS = $this->input->post('STATUS');
+			
+			$data = [
+
+				'NAMA_INVENTORY' => $NAMA_INVENTORY,
+				'ID_DEPARTEMEN' => $ID_DEPARTEMEN,
+				'STATUS' => $STATUS			
+			];
+
+        $save = $this->mi->update($data, $ID_INVENTORY);
+		
+		if($save) {
+            $this->session->set_flashdata('msg_success', 'Data telah diubah!');
+        } else {
+            $this->session->set_flashdata('msg_error', 'Data gagal disimpan, silakan isi ulang!');
+        }
+		
+        redirect('admin/Inventory');
+    }
+
+    // public function track($id)
+    // {
+    //     $data['title'] = 'Detail';
+    //     $data['track'] = $this->mu->track($id);
+    //     $data['track_user'] = $this->mu->track_user($id);
+    //     $this->template->load('user/template', 'user/track', $data);
+    // }
+
+
     public function konfirmasi($ID_TIKET)
     {
         $STATUS_TIKET = 7;

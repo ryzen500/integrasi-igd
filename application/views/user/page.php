@@ -79,53 +79,56 @@
                                         <thead>
                                             <tr>
                                                 <th>No.</th>
-                                                <th>No. Tiket Ajuan Complain</th>
-                                                <th>Departemen Tujuan</th>
-                                                <th>Nama Pelapor</th>
-                                                <th>Departemen Pelapor</th>
-                                                <th>Tipe Masalah</th>
+                                                <th>No Pendaftaran</th>
+                                                <th>No Rekam Medik</th>
+                                                <th>Nama Pasien</th>
+                                                <th>Tanggal Jam Pasien Masuk</th>
+                                                <th>Dokter Jaga IGD</th>
+                                                <!-- <th>Tipe Masalah</th>
                                                 <th>Keterangan Masalah</th>
                                                 <th>Solusi</th>
                                                 <th>Tanggal Ajuan</th>
-                                                <th>Status</th>
-                                                <th>Detail Attachment</th>
-                                                <th>Opsi</th>
+                                                <th>Status</th> -->
+                                                <th colspan="2" style="text-align: center;">Detail Attachment</th>
+                                                <th>Detail</th>
 
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php $no = 0;
                                             foreach ((array) $tiket as $user) {
-                                                $keterangan = $user->MASALAH;
-                                                $sentence_count = count_sentences($keterangan);
-                                                $preview = get_preview($keterangan, 1);
-                                                $idstatus = $user->STATUS_TIKET;
-                                                if ($idstatus == 1) {
-                                                    $css = "badge badge-primary";
-                                                } elseif ($idstatus == 2) {
-                                                    $css = "badge badge-secondary";
-                                                } elseif ($idstatus == 3) {
-                                                    $css = "badge badge-info";
-                                                } elseif ($idstatus == 4) {
-                                                    $css = "badge badge-success";
-                                                } elseif ($idstatus == 5) {
-                                                    $css = "badge badge-warning";
-                                                } elseif ($idstatus == 6) {
-                                                    $css = "badge badge-light";
-                                                } elseif ($idstatus == 7) {
-                                                    $css = "badge badge-light";
-                                                }
+                                                // $keterangan = $user->MASALAH;
+                                                // $sentence_count = count_sentences($keterangan);
+                                                // $preview = get_preview($keterangan, 1);
+                                                // $idstatus = $user->STATUS_TIKET;
+                                                // if ($idstatus == 1) {
+                                                //     $css = "badge badge-primary";
+                                                // } elseif ($idstatus == 2) {
+                                                //     $css = "badge badge-secondary";
+                                                // } elseif ($idstatus == 3) {
+                                                //     $css = "badge badge-info";
+                                                // } elseif ($idstatus == 4) {
+                                                //     $css = "badge badge-success";
+                                                // } elseif ($idstatus == 5) {
+                                                //     $css = "badge badge-warning";
+                                                // } elseif ($idstatus == 6) {
+                                                //     $css = "badge badge-light";
+                                                // } elseif ($idstatus == 7) {
+                                                //     $css = "badge badge-light";
+                                                // }
 
                                                 $no++
                                             ?>
                                                 <tr>
                                                     <td><?= $no ?></td>
-                                                    <td><?= $user->ID_TIKET ?></td>
-                                                    <td><?= $user->DEPARTEMEN ?></td>
-                                                    <td><?= (!empty($user->nama_pelapor) ? $user->nama_pelapor : "-") ?></td>
-                                                    <td><?= (!empty($user->divisi_pelapor) ? $user->divisi_pelapor : "-") ?></td>
+                                                    <td><?= (!empty($user->no_pendaftaran) ? $user->no_pendaftaran : "-") ?></td>
 
-                                                    <td><?= $user->SUB_MASALAH ?></td>
+                                                    <td><?= $user->no_rekam_medik ?></td>
+                                                    <td><?= $user->nama_pasien ?></td>
+                                                    <td style="text-align: center;"><?= (!empty($user->tanggal_jam_pasien_masuk) ? date("Y-m-d", strtotime($user->tanggal_jam_pasien_masuk)) : "-") ?></td>
+                                                    <td><?= (!empty($user->dokter_jaga_igd) ? $user->dokter_jaga_igd : "-") ?></td>
+
+                                                    <!--  <td><?= $user->SUB_MASALAH ?></td>
                                                     <td><?= $preview ?>
                                                         <?php if ($sentence_count > 10) : ?>
                                                             <button type="button" class="btn btn-link baca-detail" data-toggle="modal" data-target="#detailModal" data-id="<?= $user->ID_TIKET ?>">Baca Detail</button>
@@ -135,10 +138,16 @@
                                                     <td><?= $user->TANGGAL ?></td>
                                                     <td>
                                                         <span class="<?= $css ?>"> <?= $user->isi_STATUS ?></span>
-                                                    </td>
-                                                    <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#fileModal" data-id="<?= $user->ID_TIKET ?>">Detail</button></td>
+                                                    </td> -->
+                                                        <td><a href="<?= site_url('user/Dashboard/edit/' . $user->id) ?>"><button type="button" class="btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i>
 
-                                                    <td><a href="<?= site_url('user/Dashboard/track/' . $user->ID_TIKET) ?>"><button type="button" class="btn btn-primary"><i class="fas fa-solid fa-faw fa-file-alt"></i></button></a>
+
+                                                    <td><button type="button" class="btn btn-danger" data-id="<?= $user->id ?>"><i class="fa fa-trash" aria-hidden="true"></i></button></td>
+
+                                                    <!-- <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#fileModal" data-id="<?= $user->id ?>">Detail File</button></td> -->
+
+                                                    <td><a href="<?= site_url('user/Dashboard/track/' . $user->id) ?>"><button type="button" class="btn btn-primary"><i class="fa fa-wpforms" aria-hidden="true"></i>
+</button></a>
                                                     </td>
                                                 </tr>
                                             <?php
