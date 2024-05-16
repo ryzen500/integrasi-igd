@@ -42,6 +42,12 @@ class Mtuser extends CI_Model
         // $this->db->order_by('t.TANGGAL', 'DESC');
         return $this->db->get()->result();
     }
+
+
+		public function update($data, $id)
+		{
+			return $this->db->update('laporan_rekap', $data, ['id'=>$id]);
+		}
     
 
     public function tiket_user()

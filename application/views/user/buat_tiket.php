@@ -391,13 +391,10 @@
                 // Declare variables using destructuring assignment
                 var {
                   additionalInfo = '',
-                    additionalTekananDarah = '',
-                    additionalDetakNadi = '',
-                    additionalPernafasan = '',
-                    additionalSuhuTubuh = '',
-                    additionalTinggiBadan = '',
-                    additionalBeratBadan = '',
-                    additionalGCS = '',
+                  additionaltekanan_darah = '',
+                    additionaltinggibadan = '',
+                    additionalberatbadan = '',
+                    additionalgcs = '',
                     additional_lk = '',
                     additional_ll = '',
                     additional_ld = '',
@@ -409,7 +406,11 @@
                     keterangananamesa = '',
                     tindakanmedis = '',
                     konsultasidokter = '',
-                    no_pendaftaran = ''
+                    no_pendaftaran = '',
+                    additionaldetak_nadi='',
+                    additionalpernafasan='',
+                    additionalsuhutubuh='',
+                    
 
 
 
