@@ -31,22 +31,23 @@ class Dashboard extends CI_Controller
     }
 
 
-    public function get_detail_masalah() {
+    public function get_detail_masalah()
+    {
         $id = $this->input->post('id');
         // Ambil data dari database berdasarkan ID
         $data =  $this->db->get_where('tiket', array('ID_TIKET' => $id))->result();
-        
+
 
         // echo "<pre>";
         // var_dump($data);die;
-    
+
         echo json_encode(array(
             'full_masalah' => $data
         ));
     }
 
 
-    
+
     public function buat_tiket()
     {
         $id = $this->session->userdata('id_user');
@@ -133,19 +134,20 @@ class Dashboard extends CI_Controller
         // Form validation rules
         $this->form_validation->set_rules('nomor_rekam_medik', 'Nomor Rekam Medik', 'trim|required');
         // Tambahkan aturan validasi sesuai kebutuhan untuk setiap field
-        
+
         if ($this->form_validation->run() == TRUE) {
-    
+
             // Ambil data dari $_POST
             $nomor_rekam_medik = $this->input->post('nomor_rekam_medik');
             $no_pendaftaran = $this->input->post('no_pendaftaran');
+
 
             $dokter_jaga_igd = $this->input->post('dokter_jaga_igd');
             $tanggal_mrs = $this->input->post('tanggal_mrs');
             $nama_pasien = $this->input->post('nama_pasien');
             $tanggal_lahir_pasien = $this->input->post('tanggal_lahir_pasien');
             $diagnosa_primer = $this->input->post('diagnosa_primer');
-            $diagnosa_tambahan = $this->input->post('diagnosa_tambahan');
+            $diagnosa_tambahan = strip_tags(str_replace(["\r", "\n"], "", $this->input->post('diagnosa_tambahan')));
             $diagnosa_sekunder = $this->input->post('diagnosa_sekunder');
             $tekanan_darah = $this->input->post('tekanan_darah');
             $detak_nadi = $this->input->post('detak_nadi');
@@ -162,20 +164,20 @@ class Dashboard extends CI_Controller
             $riwayat_penyakit_dahulu = $this->input->post('riwayat_penyakit_dahulu');
             $riwayat_alergi_obat = $this->input->post('riwayat_alergi_obat');
             $riwayat_alergi_makanan = $this->input->post('riwayat_alergi_makanan');
-            $tindakan_medis = $this->input->post('tindakan_medis');
-            $konsultasi_dokter_spesialis = $this->input->post('konsultasi_dokter_spesialis');
-            $tindakan_di_igd = $this->input->post('tindakan_di_igd');
-            $keterangan = $this->input->post('keterangan');
+            $tindakan_medis = strip_tags(str_replace(["\r", "\n"], "", $this->input->post('konsultasi_dokter_spesialis')));
+            $konsultasi_dokter_spesialis =  strip_tags(str_replace(["\r", "\n"], "", $this->input->post('konsultasi_dokter_spesialis')));
+            $tindakan_di_igd = strip_tags(str_replace(["\r", "\n"], "", $this->input->post('tindakan_di_igd')));
+            $keterangan = strip_tags(str_replace(["\r", "\n"], "", $this->input->post('keterangan')));
             $jam_pindah = $this->input->post('jam_pindah');
             $id_user = $this->input->post('id_user');
-    
+
             // Buat array untuk disimpan ke dalam database
             $data = array(
                 'no_rekam_medik' => $nomor_rekam_medik,
-                'no_pendaftaran'=>$no_pendaftaran,
+                'no_pendaftaran' => $no_pendaftaran,
                 'tanggal_jam_pasien_masuk' => $tanggal_mrs,
                 'nama_pasien' => $nama_pasien,
-                'dokter_jaga_igd'=>$dokter_jaga_igd,
+                'dokter_jaga_igd' => $dokter_jaga_igd,
                 'tanggal_lahir_pasien' => $tanggal_lahir_pasien,
                 'diagnosa_primer' => $diagnosa_primer,
                 'diagnosa_tambahan' => $diagnosa_tambahan,
@@ -202,10 +204,10 @@ class Dashboard extends CI_Controller
                 'jam_pindah' => $jam_pindah,
                 'id_user' => $id_user
             );
-    
+
             // Insert data ke dalam database
             $this->db->insert('laporan_rekap', $data);
-    
+
             // Redirect setelah berhasil insert data
             redirect('user/Dashboard');
         } else {
@@ -213,7 +215,7 @@ class Dashboard extends CI_Controller
             $this->buat_tiket();
         }
     }
-    
+
 
 
 
@@ -332,36 +334,115 @@ class Dashboard extends CI_Controller
         $this->template->load('user/template', 'user/track', $data);
     }
 
-    		public function edit($id)
-		{
-			// $data['departemen'] = $this->mde->getAll();
-			$data['title'] ="Edit Data";
-            $data['laporan_rekap'] = $this->mu->track_user($id);
-			$this->template->load('user/template','user/edit_tiket',$data);
-		}
+    public function edit($id)
+    {
+        // $data['departemen'] = $this->mde->getAll();
+        $data['title'] = "Edit Data";
+        $data['laporan_rekap'] = $this->mu->track_user($id);
+        $this->template->load('user/template', 'user/edit_tiket', $data);
+    }
 
-		public function update(){
-			$ID_INVENTORY = $this->input->post('ID_INVENTORY');
-			$NAMA_INVENTORY = $this->input->post('NAMA_INVENTORY');
-			$ID_DEPARTEMEN = $this->input->post('ID_DEPARTEMEN');
-			$STATUS = $this->input->post('STATUS');
-			
-			$data = [
+    public function edit_tiket_action()
+    {
 
-				'NAMA_INVENTORY' => $NAMA_INVENTORY,
-				'ID_DEPARTEMEN' => $ID_DEPARTEMEN,
-				'STATUS' => $STATUS			
-			];
+        function stripSpecificTags($text, $allowedTags = '<b><i><u><span><strong><em>')
+        {
+            return strip_tags($text, $allowedTags);
+        }
 
-        $save = $this->mi->update($data, $ID_INVENTORY);
-		
-		if($save) {
-            $this->session->set_flashdata('msg_success', 'Data telah diubah!');
+
+        // Form validation rules
+        //   $this->form_validation->set_rules('nomor_rekam_medik', 'Nomor Rekam Medik', 'trim|required');
+        // Tambahkan aturan validasi sesuai kebutuhan untuk setiap field
+
+        //   var_dump($this->form_validation->run());die;
+        if (!empty($_POST)) {
+
+            // Ambil data dari $_POST
+
+            // echo "<pre>";
+            // var_dump($_POST);die;
+            $nomor_rekam_medik = $this->input->post('nomor_rekam_medik');
+            $no_pendaftaran = $this->input->post('no_pendaftaran');
+            $id = $this->input->post('id');
+
+            $dokter_jaga_igd = $this->input->post('dokter_jaga_igd');
+            $tanggal_mrs = $this->input->post('tanggal_mrs');
+            $nama_pasien = $this->input->post('nama_pasien');
+            $tanggal_lahir_pasien = $this->input->post('tanggal_lahir_pasien');
+            $diagnosa_primer = $this->input->post('diagnosa_primer');
+            $diagnosa_tambahan = strip_tags(str_replace(["\r", "\n"], "", $this->input->post('diagnosa_tambahan')));
+            $diagnosa_sekunder = $this->input->post('diagnosa_sekunder');
+            $tekanan_darah = $this->input->post('tekanan_darah');
+            $detak_nadi = $this->input->post('detak_nadi');
+            $pernafasan = $this->input->post('pernafasan');
+            $suhu_tubuh = $this->input->post('suhu_tubuh');
+            $tinggi_badan = $this->input->post('tinggi_badan');
+            $berat_badan = $this->input->post('berat_badan');
+            $GCS = $this->input->post('GCS');
+            $LK = $this->input->post('LK');
+            $LL = $this->input->post('LL');
+            $LD = $this->input->post('LD');
+            $keluhan_utama = $this->input->post('keluhan_utama');
+            $anamnesis = $this->input->post('anamnesis');
+            $riwayat_penyakit_dahulu = $this->input->post('riwayat_penyakit_dahulu');
+            $riwayat_alergi_obat = $this->input->post('riwayat_alergi_obat');
+            $riwayat_alergi_makanan = $this->input->post('riwayat_alergi_makanan');
+            $tindakan_medis = strip_tags(str_replace(["\r", "\n"], "", $this->input->post('konsultasi_dokter_spesialis')));
+            $konsultasi_dokter_spesialis =  strip_tags(str_replace(["\r", "\n"], "", $this->input->post('konsultasi_dokter_spesialis')));
+            $tindakan_di_igd = strip_tags(str_replace(["\r", "\n"], "", $this->input->post('tindakan_di_igd')));
+            $keterangan = strip_tags(str_replace(["\r", "\n"], "", $this->input->post('keterangan')));
+            $jam_pindah = $this->input->post('jam_pindah');
+            $id_user = $this->input->post('id_user');
+
+            // Buat array untuk disimpan ke dalam database
+            $data = array(
+                'no_pendaftaran' => $no_pendaftaran,
+                'tanggal_jam_pasien_masuk' => $tanggal_mrs,
+                'diagnosa_primer' => $diagnosa_primer,
+                'diagnosa_tambahan' => $diagnosa_tambahan,
+                'diagnosa_sekunder' => $diagnosa_sekunder,
+                'tekanan_darah' => $tekanan_darah,
+                'detak_nadi' => $detak_nadi,
+                'pernafasan' => $pernafasan,
+                'suhu_tubuh' => $suhu_tubuh,
+                'tinggi_badan' => $tinggi_badan,
+                'berat_badan' => $berat_badan,
+                'GCS' => $GCS,
+                'LK' => $LK,
+                'LL' => $LL,
+                'LD' => $LD,
+                'keluhan_utama' => $keluhan_utama,
+                'anamnesis' => $anamnesis,
+                'riwayat_penyakit_dahulu' => $riwayat_penyakit_dahulu,
+                'riwayat_alergi_obat' => $riwayat_alergi_obat,
+                'riwayat_alergi_makanan' => $riwayat_alergi_makanan,
+                'tindakan_medis' => $tindakan_medis,
+                'konsultasi_dokter_spesialis' => $konsultasi_dokter_spesialis,
+                'tindakan_di_igd' => $tindakan_di_igd,
+                'keterangan' => $keterangan,
+                'jam_pindah' => $jam_pindah,
+                'id_user' => $id_user
+            );
+
+            // Insert data ke dalam database
+            //   $this->db->insert('laporan_rekap', $data);
+            $save = $this->mu->update($data, $id);
+
+            if ($save) {
+                # code...
+                $this->session->set_flashdata('msg_success', 'Data telah diubah!');
+                redirect('user/Dashboard');
+            } else {
+                echo "Gagal";
+                die;
+            }
+            // Redirect setelah berhasil insert data
         } else {
+            // Jika validasi gagal, kembali ke form pembuatan tiket
+            // $this->buat_tiket();
             $this->session->set_flashdata('msg_error', 'Data gagal disimpan, silakan isi ulang!');
         }
-		
-        redirect('admin/Inventory');
     }
 
     // public function track($id)
@@ -390,7 +471,7 @@ class Dashboard extends CI_Controller
             'ID_TIKET' => $ID_TIKET,
             'ID_STATUS' => $STATUS_TIKET,
             'ID_TEKNISI' => $TEKNISI,
-            'nama_pelapor'=>$nama_pelapor,
+            'nama_pelapor' => $nama_pelapor,
             'TANGGAL' => $tanggal
         ];
 

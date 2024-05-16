@@ -19,7 +19,7 @@
 
           <!-- Page Heading -->
           <div class="bg-white py-lg-5">
-            <form method="POST" action="<?= site_url('user/Dashboard/buat_tiket_action'); ?>" enctype="multipart/form-data">
+            <form method="POST" action="<?= site_url('user/Dashboard/edit_tiket_action'); ?>" enctype="multipart/form-data">
               <!--  -->
 
               <?php
@@ -32,7 +32,6 @@
 
                 <script type="text/javascript">
                   var tindakan_medis = "<?php echo $tes->tindakan_medis; ?>";
-                  var defaultDokterJagaIgd = <?php echo json_encode($tes->dokter_jaga_igd); ?>;
                   var diagnosa_tambahan = '<?php echo $tes->diagnosa_tambahan; ?>';
                   var konsultasi_dokter_spesialis = "<?php echo $tes->konsultasi_dokter_spesialis; ?>";
                   var tindakan_di_igd = "<?php echo $tes->tindakan_di_igd; ?>";
@@ -43,7 +42,7 @@
                   <label for="file" class="col-sm-2 col-form-label">Nomor Rekam Medik</label>
                   <div class="col-sm-10" id="file-upload-container">
 
-                    <input type="text" class="form-control" id="no_rekam_medik" name="no_rekam_medik" value="<?php echo $tes->no_rekam_medik; ?>" readonly>
+                    <input type="text" class="form-control" id="no_rekam_medik" value="<?php echo $tes->no_rekam_medik; ?>" name="no_rekam_medik"  readonly>
 
                   </div>
                 </div>
@@ -65,6 +64,7 @@
                   <div class="col-sm-10" id="file-upload-container">
                     <input type="text" class="form-control" id="nama_pasien" value="<?php echo $tes->nama_pasien; ?>" name="nama_pasien" readonly>
                     <input type="hidden" class="form-control" id="no_pendaftaran" value="<?php echo $tes->no_pendaftaran; ?>" name="no_pendaftaran" readonly>
+                    <input type="hidden" class="form-control" id="" value="<?php echo $tes->id; ?>" name="id" readonly>
 
                   </div>
 
@@ -75,9 +75,8 @@
                   <!-- Your existing form content here -->
                   <label for="file" class="col-sm-2 col-form-label">Dokter Jaga IGD</label>
                   <div class="col-sm-10" id="file-upload-container">
-                    <select id="divisi_pelapor" class="form-control" name="dokter_jaga_igd">
-                      <option value="">--Pilih opsi--</option>
-                    </select>
+                  <input type="text" class="form-control" id="nama_pasien" value="<?php echo $tes->dokter_jaga_igd; ?>" name="nama_pasien" readonly>
+                 
                   </div>
                 </div>
 
@@ -389,186 +388,6 @@
 
       // Dropdown
 
-      $('#myDropdown').select2({
-        placeholder: 'Masukkan  No Rekam Medik...',
-        allowClear: true,
-        ajax: {
-          url: url, // Endpoint API
-          dataType: 'json',
-          delay: 250, // Penundaan untuk mengurangi beban server
-          data: function(params) {
-            return {
-              q: params.term // Mengambil parameter pencarian dari input
-            };
-          },
-          processResults: function(data) {
-
-            // Menyiapkan informasi tambahan dari child_diagnosa jika ada
-
-
-            return {
-              results: data.map(function(item) {
-                // Declare variables using destructuring assignment
-                var {
-                  additionalInfo = '',
-                    additionalTekananDarah = '',
-                    additionalDetakNadi = '',
-                    additionalPernafasan = '',
-                    additionalSuhuTubuh = '',
-                    additionalTinggiBadan = '',
-                    additionalBeratBadan = '',
-                    additionalGCS = '',
-                    additional_lk = '',
-                    additional_ll = '',
-                    additional_ld = '',
-                    additional_keluhan_utama = '',
-                    riwayatpenyakitterdahulu = '',
-                    riwayatalergiobat = '',
-                    reaksialergiobat = '',
-                    reaksialergimakanan = '',
-                    keterangananamesa = '',
-                    tindakanmedis = '',
-                    konsultasidokter = '',
-                    no_pendaftaran = ''
-
-
-
-                } = {};
-
-
-                if (item.child_diagnosa && item.child_diagnosa.length > 0) {
-                  // Jika ada child_diagnosa, gabungkan diagnosa_nama menjadi satu string
-                  additionalInfo = item.child_diagnosa.map(function(diagnosa) {
-                    return diagnosa.diagnosa_nama;
-                  }).join(', ');
-
-
-                }
-
-                // Triase
-                if (item.child_triase && item.child_triase.length > 0) {
-                  additionaltekanan_darah = item.child_triase.map(function(triase) {
-                    return `${triase.td_systolic} / ${triase.td_diastolic}`;
-                  }).join(', ');
-
-                  additionaldetak_nadi = item.child_triase.map(function(triase) {
-                    return triase.detaknadi;
-                  }).join(', ');
-
-                  additionalpernafasan = item.child_triase.map(function(triase) {
-                    return triase.pernapasan;
-                  }).join(', ');
-
-                  additionalsuhutubuh = item.child_triase.map(function(triase) {
-                    return triase.suhutubuh;
-                  }).join(', ');
-
-                  additionaltinggibadan = item.child_triase.map(function(triase) {
-                    return triase.tinggibadan_cm;
-                  }).join(', ');
-
-                  additionalberatbadan = item.child_triase.map(function(triase) {
-                    return triase.beratbadan_kg;
-                  }).join(', ');
-
-                  additionalgcs = item.child_triase.map(function(triase) {
-                    return triase.gcs_nilai;
-                  }).join(', ');
-
-
-                  additional_lk = item.child_triase.map(function(triase) {
-                    return triase.lingkar_kepala;
-                  }).join(', ');
-
-
-
-                  additional_ll = item.child_triase.map(function(triase) {
-                    return triase.lingkar_lengan;
-                  }).join(', ');
-
-
-
-                  additional_ld = item.child_triase.map(function(triase) {
-                    return triase.lingkar_dada;
-                  }).join(', ');
-
-
-                  // Menampilkan additionalTriase di konsol browser
-                  console.log("additionalTriase:", additionaltekanan_darah);
-                }
-
-
-                // Anamnesa
-                if (item.child_anamnesa && item.child_anamnesa.length > 0) {
-                  additional_keluhan_utama = item.child_anamnesa.map(function(anamnesa) {
-                    return anamnesa.keluhanutama;
-                  }).join(', ');
-                  riwayatpenyakitterdahulu = item.child_anamnesa.map(function(anamnesa) {
-                    return anamnesa.riwayatpenyakitterdahulu;
-                  }).join(', ');
-
-
-                  riwayatalergiobat = item.child_anamnesa.map(function(anamnesa) {
-                    return anamnesa.riwayatalergiobat;
-                  }).join(', ');
-
-                  reaksialergimakanan = item.child_anamnesa.map(function(anamnesa) {
-                    return anamnesa.reaksialergimakanan;
-                  }).join(', ');
-
-
-                  riwayatalergiobat = item.child_anamnesa.map(function(anamnesa) {
-                    return anamnesa.riwayatalergiobat;
-                  }).join(', ');
-
-
-
-                  tindakanmedis = item.child_anamnesa.map(function(anamnesa) {
-                    return anamnesa.tindakanmedis;
-                  }).join(', ');
-
-
-                  konsultasidokter = item.child_anamnesa.map(function(anamnesa) {
-                    return anamnesa.konsultasidokter;
-                  }).join(', ');
-
-
-                  console.log(riwayatalergiobat);
-                }
-
-
-                $("#keluhan_utama").val(additional_keluhan_utama);
-
-                $("#no_pendaftaran").val(item.no_pendaftaran);
-                $("#nama_pasien").val(item.nama_pasien);
-                $("#diagnosa_primer").val(item.diagnosa_nama);
-                $("#tanggal_mrs").val(item.tgl_pendaftaran);
-                $("#tanggal_lahir_pasien").val(item.tanggal_lahir);
-                $("#detak_nadi").val(additionaldetak_nadi);
-                $("#pernafasan").val(additionalpernafasan);
-                $("#suhu_tubuh").val(additionalsuhutubuh);
-                $("#tinggi_badan").val(additionaltinggibadan);
-                $("#berat_badan").val(additionalberatbadan);
-                $("#gcs").val(additionalgcs);
-                $("#lk").val(additional_lk);
-                $("#ll").val(additional_ll);
-                $("#ld").val(additional_ld);
-
-                $("#riwayat_penyakit_dahulu").val(riwayatpenyakitterdahulu);
-                $("#riwayat_alergi_obat").val(riwayatalergiobat);
-                $("#riwayat_alergi_makanan").val(reaksialergimakanan);
-                $("#tekanan_darah").val(additionaltekanan_darah);
-                $("#diagnosa_sekunder").val(additionalInfo);
-                return {
-                  id: item.no_rekam_medik,
-                  text: ` ${item.no_rekam_medik} -- ${item.no_pendaftaran} --  ${item.tgl_pendaftaran}` // Sesuaikan dengan format data dari endpoint
-                };
-              })
-            };
-          }
-        }
-      });
-
 
 
 
@@ -626,12 +445,6 @@
       });
 
 
-      // Set default value if exists
-      if (defaultDokterJagaIgd) {
-        var newOption = new Option(defaultDokterJagaIgd, defaultDokterJagaIgd, true, true);
-        console.log("default Dokter Jaga IGD ", defaultDokterJagaIgd);
-        $('#divisi_pelapor').append(newOption).trigger('change');
-      }
 
     });
 
