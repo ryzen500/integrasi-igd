@@ -12,7 +12,15 @@
 
     <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item mt-0">
-        <a class="nav-link" href="<?php echo site_url('user/Dashboard'); ?>" aria-expanded="true">
+        <a class="nav-link" href="<?php echo site_url('user/Dashboard/index'); ?>" aria-expanded="true">
+            <i class="fas fa-fw fa-ticket-alt"></i>
+            <span>Data Global</span>
+        </a>
+
+    </li>
+
+    <li class="nav-item mt-0">
+        <a class="nav-link" href="<?php echo site_url('user/Dashboard/index_per_user'); ?>" aria-expanded="true">
             <i class="fas fa-fw fa-ticket-alt"></i>
             <span>Data Saya</span>
         </a>
