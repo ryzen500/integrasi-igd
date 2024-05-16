@@ -42,7 +42,7 @@
                   <label for="file" class="col-sm-2 col-form-label">Nomor Rekam Medik</label>
                   <div class="col-sm-10" id="file-upload-container">
 
-                    <input type="text" class="form-control" id="no_rekam_medik" value="<?php echo $tes->no_rekam_medik; ?>" name="no_rekam_medik"  readonly>
+                    <input type="text" class="form-control" id="no_rekam_medik" value="<?php echo $tes->no_rekam_medik; ?>" name="no_rekam_medik" readonly>
 
                   </div>
                 </div>
@@ -75,8 +75,8 @@
                   <!-- Your existing form content here -->
                   <label for="file" class="col-sm-2 col-form-label">Dokter Jaga IGD</label>
                   <div class="col-sm-10" id="file-upload-container">
-                  <input type="text" class="form-control" id="nama_pasien" value="<?php echo $tes->dokter_jaga_igd; ?>" name="nama_pasien" readonly>
-                 
+                    <input type="text" class="form-control" id="nama_pasien" value="<?php echo $tes->dokter_jaga_igd; ?>" name="nama_pasien" readonly>
+
                   </div>
                 </div>
 
@@ -109,7 +109,7 @@
                 <div class="form-group row ml-5 mr-5">
                   <label for="diagnosa_tambahan" class="col-sm-2 col-form-label">Diagnosa Tambahan</label>
                   <div class="col-sm-10">
-                    <textarea class="form-control" id="diagnosa_tambahan" name="diagnosa_tambahan" value="-"></textarea>
+                    <input class="form-control" id="diagnosa_tambahan" name="diagnosa_tambahan" value="<?php echo $tes->diagnosa_tambahan; ?>"/>
 
                     <?= form_error('diagnosa_tambahan', '<small class="text-danger pl-3">', '</small>') ?>
                   </div>
@@ -126,76 +126,67 @@
                   </div>
                 </div>
 
-
-
                 <div class="form-group row ml-5 mr-5">
                   <label for="tekanan_darah" class="col-sm-2 col-form-label" style="text-align: center;">Tekanan Darah</label>
-                  <div class="col-sm-3">
+                  <div class="col-sm-2">
                     <input class="form-control" id="tekanan_darah" name="tekanan_darah" value="<?php echo $tes->tekanan_darah; ?>" />
 
                     <?= form_error('tekanan_darah', '<small class="text-danger pl-3">', '</small>') ?>
                   </div>
 
-                </div>
-
-
-
-                <div class="form-group row ml-5 mr-5">
                   <label for="detak_nadi" class="col-sm-2 col-form-label" style="text-align: center;">Detak Nadi</label>
-                  <div class="col-sm-3">
+                  <div class="col-sm-2">
                     <input class="form-control" id="detak_nadi" name="detak_nadi" value="<?php echo $tes->detak_nadi; ?>" />
 
                     <?= form_error('detak_nadi', '<small class="text-danger pl-3">', '</small>') ?>
                   </div>
 
-                </div>
-
-
-
-
-                <div class="form-group row ml-5 mr-5">
                   <label for="pernafasan" class="col-sm-2 col-form-label" style="text-align: center;">Pernafasan</label>
-                  <div class="col-sm-3">
+                  <div class="col-sm-2">
                     <input class="form-control" id="pernafasan" name="pernafasan" value="<?php echo $tes->pernafasan; ?>" />
 
                     <?= form_error('pernafasan', '<small class="text-danger pl-3">', '</small>') ?>
                   </div>
-
                 </div>
+
+
+
+                <!-- <div class="form-group row ml-5 mr-5">
+               
+              </div>
+ -->
+
+
+                <!-- 
+              <div class="form-group row ml-5 mr-5">
+            
+
+              </div> -->
 
                 <div class="form-group row ml-5 mr-5">
                   <label for="suhu_tubuh" class="col-sm-2 col-form-label" style="text-align: center;">Suhu Tubuh</label>
-                  <div class="col-sm-3">
-                    <input class="form-control" id="suhu_tubuh" name="suhu_tubuh" value="<?php echo $tes->suhu_tubuh; ?>" />
+                  <div class="col-sm-2">
+                    <input class="form-control" id="suhu_tubuh" name="suhu_tubuh" value="<?php echo $tes->suhu_tubuh ?>" />
 
                     <?= form_error('suhu_tubuh', '<small class="text-danger pl-3">', '</small>') ?>
                   </div>
 
-                </div>
 
-
-
-
-                <div class="form-group row ml-5 mr-5">
                   <label for="tinggi_badan" class="col-sm-2 col-form-label" style="text-align: center;">Tinggi badan</label>
-                  <div class="col-sm-3">
-                    <input class="form-control" id="tinggi_badan" name="tinggi_badan" value="<?php echo $tes->tinggi_badan; ?>" />
+                  <div class="col-sm-2">
+                    <input class="form-control" id="tinggi_badan" name="tinggi_badan" value="<?php echo $tes->tinggi_badan ?>" />
 
                     <?= form_error('tinggi_badan', '<small class="text-danger pl-3">', '</small>') ?>
                   </div>
 
-                </div>
-
-
-                <div class="form-group row ml-5 mr-5">
                   <label for="berat_badan" class="col-sm-2 col-form-label" style="text-align: center;">Berat badan</label>
-                  <div class="col-sm-3">
-                    <input class="form-control" id="berat_badan" name="berat_badan" value="<?php echo $tes->berat_badan; ?>" />
+                  <div class="col-sm-2">
+                    <input class="form-control" id="berat_badan" name="berat_badan"  value="<?php echo $tes->berat_badan ?>"  />
 
                     <?= form_error('berat_badan', '<small class="text-danger pl-3">', '</small>') ?>
                   </div>
-
                 </div>
+
 
 
                 <div class="form-group row ml-5 mr-5">
@@ -327,7 +318,7 @@
                 <div class="form-group row ml-5 mr-5">
                   <label for="keterangan" class="col-sm-2 col-form-label">Keterangan<sup style="color: red;">*</sup></label>
                   <div class="col-sm-10">
-                    <textarea class="form-control" id="keterangan" name="keterangan" value=""></textarea>
+                    <input class="form-control" id="keterangan" name="keterangan" value="<?php echo $tes->keterangan; ?>"/>
                     <?= form_error('keterangan', '<small class="text-danger pl-3">', '</small>') ?>
                   </div>
                 </div>
@@ -336,7 +327,7 @@
                 <div class="form-group row ml-5 mr-5">
                   <label for="jam_pindah" class="col-sm-2 col-form-label">Jam Pindah <sup style="color: red;">*</sup></label>
                   <div class="col-sm-10">
-                    <textarea class="form-control" id="jam_pindah" name="jam_pindah" value=""></textarea>
+                    <input class="form-control" id="jam_pindah" name="jam_pindah" value="<?php echo $tes->jam_pindah; ?>" />
                     <?= form_error('jam_pindah', '<small class="text-danger pl-3">', '</small>') ?>
                   </div>
                 </div>
@@ -448,21 +439,21 @@
 
     });
 
-    if (CKEDITOR.instances.diagnosa_tambahan) {
-      // Hancurkan instance CKEditor jika sudah ada
-      CKEDITOR.instances.diagnosa_tambahan.destroy();
-    }
+    // if (CKEDITOR.instances.diagnosa_tambahan) {
+    //   // Hancurkan instance CKEditor jika sudah ada
+    //   CKEDITOR.instances.diagnosa_tambahan.destroy();
+    // }
 
     // Setel nilai textarea sebelum menginisialisasi ulang CKEditor
-    $("#diagnosa_tambahan").val(diagnosa_tambahan);
+    // $("#diagnosa_tambahan").val(diagnosa_tambahan);
 
     // Inisialisasi ulang CKEditor
-    CKEDITOR.replace('diagnosa_tambahan');
+    // CKEDITOR.replace('diagnosa_tambahan');
 
     // Tunggu sampai CKEditor siap, kemudian setel nilai ke editor
-    CKEDITOR.instances.diagnosa_tambahan.on('instanceReady', function() {
-      CKEDITOR.instances.diagnosa_tambahan.setData(diagnosa_tambahan);
-    });
+    // CKEDITOR.instances.diagnosa_tambahan.on('instanceReady', function() {
+    //   CKEDITOR.instances.diagnosa_tambahan.setData(diagnosa_tambahan);
+    // });
 
 
 
@@ -528,32 +519,7 @@
 
 
 
-    // ------- Keterangan
-
-    if (CKEDITOR.instances.keterangan) {
-      // Hancurkan instance CKEditor jika sudah ada
-      CKEDITOR.instances.keterangan.destroy();
-    }
 
 
-    console.log("Konsultasi Dokter Spesialis ", keterangan);
-    // Setel nilai textarea sebelum menginisialisasi ulang CKEditor
-    $("#keterangan").val(keterangan);
 
-    // Inisialisasi ulang CKEditor
-    CKEDITOR.replace('keterangan');
-
-    // Tunggu sampai CKEditor siap, kemudian setel nilai ke editor
-    CKEDITOR.instances.keterangan.on('instanceReady', function() {
-      CKEDITOR.instances.keterangan.setData(keterangan);
-    });
-
-
-    // CKEDITOR.replace('tindakan_medis'); // 'editor1' is the ID of the text area
-    // CKEDITOR.replace('konsultasi_dokter_spesialis'); // 'editor1' is the ID of the text area
-
-    // CKEDITOR.replace('diagnosa_tambahan'); // 'editor1' is the ID of the text area
-    // CKEDITOR.replace('keterangan'); // 'editor1' is the ID of the text area
-    CKEDITOR.replace('jam_pindah'); // 'editor1' is the ID of the text area
-    // CKEDITOR.replace('tindakan_di_igd'); // 'editor1' is the ID of the text area
   </script>

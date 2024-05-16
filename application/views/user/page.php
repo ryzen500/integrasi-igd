@@ -139,15 +139,17 @@
                                                     <td>
                                                         <span class="<?= $css ?>"> <?= $user->isi_STATUS ?></span>
                                                     </td> -->
-                                                        <td><a href="<?= site_url('user/Dashboard/edit/' . $user->id) ?>"><button type="button" class="btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i>
+                                                    <td><a href="<?= site_url('user/Dashboard/edit/' . $user->id) ?>"><button type="button" class="btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i>
 
 
-                                                    <td><button type="button" class="btn btn-danger" data-id="<?= $user->id ?>"><i class="fa fa-trash" aria-hidden="true"></i></button></td>
+                                                                <!-- <td><a href="<?= site_url('user/Dashboard/hapus/' . $user->id) ?>"><button type="button" class="btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i> -->
+
+                                                    <td><button type="button" onclick="dataHapus(<?php echo $user->id; ?>);" class="btn btn-danger" data-id="<?= $user->id ?>"><i class="fa fa-trash" aria-hidden="true"></i></button></td>
 
                                                     <!-- <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#fileModal" data-id="<?= $user->id ?>">Detail File</button></td> -->
 
                                                     <td><a href="<?= site_url('user/Dashboard/track/' . $user->id) ?>"><button type="button" class="btn btn-primary"><i class="fa fa-wpforms" aria-hidden="true"></i>
-</button></a>
+                                                            </button></a>
                                                     </td>
                                                 </tr>
                                             <?php
@@ -180,6 +182,29 @@
     <i class="fas fa-angle-up"></i>
 </a>
 <script>
+    function dataHapus(id) {
+        console.log("-_-");
+
+        var result = confirm("Apakah Anda yakin ingin menghapus data ini?");
+        if (result) {
+            // AJAX untuk mendapatkan daftar file
+            $.ajax({
+                url: '<?= site_url('user/Dashboard/dataHapus') ?>', // Ubah ke endpoint API Anda
+                type: 'POST',
+                data: {
+                    id: id
+                },
+                success: function(response) {
+                        alert("Berhasil Dihapus");
+                        location.reload();
+                        
+                },
+                error: function() {
+               alert("Data Tidak dapat dihapus")
+                }
+            });
+        }
+    }
     $(document).ready(function() {
         $('#fileModal').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget);
@@ -212,6 +237,8 @@
                 }
             });
         });
+
+
 
 
         // Click Detail Problem

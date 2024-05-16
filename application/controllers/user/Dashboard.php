@@ -19,15 +19,47 @@ class Dashboard extends CI_Controller
         $this->load->helper('files', 'fungsi');
     }
 
-    public function index()
+
+    public function index_per_user()
     {
 
         $id = $this->session->userdata('id_user');
         // var_dump($this->session->userdata('nama_user'));die;
         $data['user'] = $this->mu->get_profil($id)->row_array();
         $data['title'] = ' Data Saya';
+        $data['tiket'] = $this->mu->tiket_user_per_user();
+        $this->template->load('user/template', 'user/page', $data);
+    }
+
+    public function index()
+    {
+
+        $id = $this->session->userdata('id_user');
+        // var_dump($this->session->userdata('nama_user'));die;
+        $data['user'] = $this->mu->get_profil($id)->row_array();
+        $data['title'] = ' Data Global'; 
         $data['tiket'] = $this->mu->tiket_user();
         $this->template->load('user/template', 'user/page', $data);
+    }
+
+
+
+    public function dataHapus()
+    {
+        $id = $this->input->post('id');
+        // Ambil data dari database berdasarkan ID
+        // $data =  $this->db->get_where('laporan_rekap', array('ID_TIKET' => $id))->result();
+
+        $data = $this->db->delete('laporan_rekap', array('id' => $id));
+
+
+        // echo "<pre>";
+        // var_dump($data);die;
+
+        echo json_encode(array(
+            'message'=>'success',
+            'full_masalah' => $data
+        ));
     }
 
 

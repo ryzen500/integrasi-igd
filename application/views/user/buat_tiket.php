@@ -60,9 +60,11 @@
                 <!-- Your existing form content here -->
                 <label for="file" class="col-sm-2 col-form-label">Dokter Jaga IGD</label>
                 <div class="col-sm-10" id="file-upload-container">
-                  <select id="divisi_pelapor" class="form-control" name="dokter_jaga_igd">
+                  <input type="text" class="form-control" id="dokter_jaga_igd" name="dokter_jaga_igd" readonly>
+
+                  <!-- <select id="divisi_pelapor" class="form-control" name="dokter_jaga_igd">
                     <option value="">--Pilih opsi--</option>
-                  </select>
+                  </select> -->
                 </div>
               </div>
 
@@ -92,14 +94,15 @@
 
 
 
+           
               <div class="form-group row ml-5 mr-5">
-                <label for="diagnosa_tambahan" class="col-sm-2 col-form-label">Diagnosa Tambahan</label>
-                <div class="col-sm-10">
-                  <textarea class="form-control" id="diagnosa_tambahan" name="diagnosa_tambahan" value=""></textarea>
+                  <label for="diagnosa_tambahan" class="col-sm-2 col-form-label">Diagnosa Tambahan</label>
+                  <div class="col-sm-10">
+                    <input class="form-control" id="diagnosa_tambahan" name="diagnosa_tambahan" value=""/>
 
-                  <?= form_error('diagnosa_tambahan', '<small class="text-danger pl-3">', '</small>') ?>
+                    <?= form_error('diagnosa_tambahan', '<small class="text-danger pl-3">', '</small>') ?>
+                  </div>
                 </div>
-              </div>
 
 
 
@@ -116,72 +119,78 @@
 
               <div class="form-group row ml-5 mr-5">
                 <label for="tekanan_darah" class="col-sm-2 col-form-label" style="text-align: center;">Tekanan Darah</label>
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                   <input class="form-control" id="tekanan_darah" name="tekanan_darah" value="" />
 
                   <?= form_error('tekanan_darah', '<small class="text-danger pl-3">', '</small>') ?>
                 </div>
 
-              </div>
-
-
-
-              <div class="form-group row ml-5 mr-5">
                 <label for="detak_nadi" class="col-sm-2 col-form-label" style="text-align: center;">Detak Nadi</label>
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                   <input class="form-control" id="detak_nadi" name="detak_nadi" value="" />
 
                   <?= form_error('detak_nadi', '<small class="text-danger pl-3">', '</small>') ?>
                 </div>
 
-              </div>
-
-
-
-
-              <div class="form-group row ml-5 mr-5">
                 <label for="pernafasan" class="col-sm-2 col-form-label" style="text-align: center;">Pernafasan</label>
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                   <input class="form-control" id="pernafasan" name="pernafasan" value="" />
 
                   <?= form_error('pernafasan', '<small class="text-danger pl-3">', '</small>') ?>
                 </div>
-
               </div>
+
+
+
+              <!-- <div class="form-group row ml-5 mr-5">
+               
+              </div>
+ -->
+
+
+              <!-- 
+              <div class="form-group row ml-5 mr-5">
+            
+
+              </div> -->
 
               <div class="form-group row ml-5 mr-5">
                 <label for="suhu_tubuh" class="col-sm-2 col-form-label" style="text-align: center;">Suhu Tubuh</label>
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                   <input class="form-control" id="suhu_tubuh" name="suhu_tubuh" value="" />
 
                   <?= form_error('suhu_tubuh', '<small class="text-danger pl-3">', '</small>') ?>
                 </div>
 
-              </div>
 
-
-
-
-              <div class="form-group row ml-5 mr-5">
                 <label for="tinggi_badan" class="col-sm-2 col-form-label" style="text-align: center;">Tinggi badan</label>
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                   <input class="form-control" id="tinggi_badan" name="tinggi_badan" value="" />
 
                   <?= form_error('tinggi_badan', '<small class="text-danger pl-3">', '</small>') ?>
                 </div>
 
-              </div>
-
-
-              <div class="form-group row ml-5 mr-5">
                 <label for="berat_badan" class="col-sm-2 col-form-label" style="text-align: center;">Berat badan</label>
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                   <input class="form-control" id="berat_badan" name="berat_badan" value="" />
 
                   <?= form_error('berat_badan', '<small class="text-danger pl-3">', '</small>') ?>
                 </div>
-
               </div>
+
+
+
+              <!-- 
+              <div class="form-group row ml-5 mr-5">
+
+
+              </div> -->
+
+
+              <!-- <div class="form-group row ml-5 mr-5">
+          
+
+              </div> -->
 
 
               <div class="form-group row ml-5 mr-5">
@@ -309,16 +318,16 @@
 
 
               <div class="form-group row ml-5 mr-5">
-                <label for="keterangan" class="col-sm-2 col-form-label">Keterangan<sup style="color: red;">*</sup></label>
+                <label for="keterangan" class="col-sm-2 col-form-label">Keterangan Pasien<sup style="color: red;">*</sup></label>
                 <div class="col-sm-10">
-                  <textarea class="form-control" id="keterangan" name="keterangan" value=""></textarea>
+                  <input class="form-control" id="keterangan" name="keterangan" value=""/>
                   <?= form_error('keterangan', '<small class="text-danger pl-3">', '</small>') ?>
                 </div>
               </div>
 
 
               <div class="form-group row ml-5 mr-5">
-                <label for="jam_pindah" class="col-sm-2 col-form-label">Jam Pindah <sup style="color: red;">*</sup></label>
+                <label for="jam_pindah" class="col-sm-2 col-form-label">Jam pindah / KRS / MRS <sup style="color: red;">*</sup></label>
                 <div class="col-sm-10">
                   <textarea class="form-control" id="jam_pindah" name="jam_pindah" value=""></textarea>
                   <?= form_error('jam_pindah', '<small class="text-danger pl-3">', '</small>') ?>
@@ -367,7 +376,6 @@
 
 
 
-      // Dropdown
 
       $('#myDropdown').select2({
         placeholder: 'Masukkan  No Rekam Medik...',
@@ -391,7 +399,7 @@
                 // Declare variables using destructuring assignment
                 var {
                   additionalInfo = '',
-                  additionaltekanan_darah = '',
+                    additionaltekanan_darah = '',
                     additionaltinggibadan = '',
                     additionalberatbadan = '',
                     additionalgcs = '',
@@ -407,10 +415,10 @@
                     tindakanmedis = '',
                     konsultasidokter = '',
                     no_pendaftaran = '',
-                    additionaldetak_nadi='',
-                    additionalpernafasan='',
-                    additionalsuhutubuh='',
-                    
+                    additionaldetak_nadi = '',
+                    additionalpernafasan = '',
+                    additionalsuhutubuh = '',
+                    additionaldpjp_id = ''
 
 
 
@@ -423,7 +431,7 @@
                     return diagnosa.diagnosa_nama;
                   }).join(', ');
 
-                  
+
                 }
 
                 // Triase
@@ -439,6 +447,11 @@
                   additionalpernafasan = item.child_triase.map(function(triase) {
                     return triase.pernapasan;
                   }).join(', ');
+
+                  additionaldpjp_id = item.child_triase.map(function(triase) {
+                    return `${triase.gelardepan} ${triase.nama_pegawai} ${triase.gelarbelakang_nama}`;
+                  }).join(', ');
+
 
                   additionalsuhutubuh = item.child_triase.map(function(triase) {
                     return triase.suhutubuh;
@@ -528,6 +541,7 @@
                 $("#detak_nadi").val(additionaldetak_nadi);
                 $("#pernafasan").val(additionalpernafasan);
                 $("#suhu_tubuh").val(additionalsuhutubuh);
+                $("#dokter_jaga_igd").val(additionaldpjp_id);
                 $("#tinggi_badan").val(additionaltinggibadan);
                 $("#berat_badan").val(additionalberatbadan);
                 $("#gcs").val(additionalgcs);
@@ -565,6 +579,7 @@
 
 
 
+
       $('#divisi_pelapor').select2({
         placeholder: 'Masukkan  Dokter Jaga IGD ',
         allowClear: true,
@@ -584,7 +599,7 @@
                 console.log(item.ID_DEPARTEMEN);
                 return {
                   id: `${item.gelardepan} ${item.nama_pegawai} ${item.gelarbelakang_nama} `,
-                  text:  `${item.gelardepan} ${item.nama_pegawai} ${item.gelarbelakang_nama} `// Sesuaikan dengan format data dari endpoint
+                  text: `${item.gelardepan} ${item.nama_pegawai} ${item.gelarbelakang_nama} ` // Sesuaikan dengan format data dari endpoint
                 };
               })
             };
@@ -621,8 +636,8 @@
     CKEDITOR.replace('tindakan_medis'); // 'editor1' is the ID of the text area
     CKEDITOR.replace('konsultasi_dokter_spesialis'); // 'editor1' is the ID of the text area
 
-    CKEDITOR.replace('diagnosa_tambahan'); // 'editor1' is the ID of the text area
-    CKEDITOR.replace('keterangan'); // 'editor1' is the ID of the text area
-    CKEDITOR.replace('jam_pindah'); // 'editor1' is the ID of the text area
+    // CKEDITOR.replace('diagnosa_tambahan'); // 'editor1' is the ID of the text area
+    // CKEDITOR.replace('keterangan'); // 'editor1' is the ID of the text area
+    // CKEDITOR.replace('jam_pindah'); // 'editor1' is the ID of the text area
     CKEDITOR.replace('tindakan_di_igd'); // 'editor1' is the ID of the text area
   </script>
