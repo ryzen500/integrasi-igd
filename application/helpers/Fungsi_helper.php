@@ -24,12 +24,8 @@ function belum_login($nama_controller)
             if (in_array($nama_controller,$menu_admin)) {
                 return true;
             }
-        }elseif ($ci->session->userdata('id_level')==2) {
+        }elseif ($ci->session->userdata('id_level')==2 || $ci->session->userdata('id_level')==3 ) {
             if (in_array($nama_controller,$menu_pengguna)) {
-                return true;
-            }
-        }elseif ($ci->session->userdata('id_level')==3) {
-            if (in_array($nama_controller,$menu_teknisi)) {
                 return true;
             }
         }

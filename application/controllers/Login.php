@@ -1,6 +1,5 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
-
 class Login extends CI_Controller
 {
     public function __construct()
@@ -45,10 +44,10 @@ class Login extends CI_Controller
                         $this->session->set_userdata($data);
                         if ($row['id_level'] == 1) {
                             redirect('admin/Dashboard');
-                        } elseif ($row['id_level'] == 2) {
-                            redirect('user/Dashboard');
+                        } elseif ($row['id_level'] == 2 || $row['id_level'] == 3 ) {
+                            redirect('user/Dashboard/index');
                         } else {
-                            redirect('teknisi/Dashboard');
+                            // redirect('teknisi/Dashboard');
                         }
                     }else {
                         $this->session->set_flashdata('message', '<div class="alert alert-danger alert-dismissible fade show" role="alert">

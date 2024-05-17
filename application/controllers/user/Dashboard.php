@@ -2,6 +2,8 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 date_default_timezone_set("Asia/Jakarta");
+require FCPATH . 'vendor/autoload.php';
+
 
 class Dashboard extends CI_Controller
 {
@@ -17,9 +19,28 @@ class Dashboard extends CI_Controller
         $this->load->helper(array('form', 'url'));
         $this->load->library('form_validation', 'session');
         $this->load->helper('files', 'fungsi');
+        // $this->load->library('Mpdf_wrapper');
     }
 
 
+
+	public function index()
+	{
+		$data['laporantiket'] = $this->mu->laporan_masuk();
+		$data['laporanyangdibuatsaya'] = $this->mu->laporan_saya();
+		$data['laporanuser'] = $this->mu->laporanuser();
+        $data['laporandokter'] = $this->mu->laporandokter();
+        $data['laporan_ppa'] = $this->mu->laporan_ppa();
+        $data['pendaftaran_terakhir'] = $this->mu->pendaftaran_terakhir();
+
+        // $data['diajukan'] = $this->md->diajukan();
+		// $data['dalam_proses'] = $this->md->dalam_proses();
+		// $data['sudah_ditangani'] = $this->md->sudah_ditangani();
+		// $data['tiket_diajukan'] = $this->md->tiket_diajukan();
+		// $data['tiket_selesai'] = $this->md->tiket_selesai();
+
+		$this->template->load('user/template', 'user/dashboard', $data);
+	}
     public function index_per_user()
     {
 
@@ -31,13 +52,13 @@ class Dashboard extends CI_Controller
         $this->template->load('user/template', 'user/page', $data);
     }
 
-    public function index()
+    public function index_global()
     {
 
         $id = $this->session->userdata('id_user');
         // var_dump($this->session->userdata('nama_user'));die;
         $data['user'] = $this->mu->get_profil($id)->row_array();
-        $data['title'] = ' Data Global'; 
+        $data['title'] = ' Data Global';
         $data['tiket'] = $this->mu->tiket_user();
         $this->template->load('user/template', 'user/page', $data);
     }
@@ -57,7 +78,7 @@ class Dashboard extends CI_Controller
         // var_dump($data);die;
 
         echo json_encode(array(
-            'message'=>'success',
+            'message' => 'success',
             'full_masalah' => $data
         ));
     }
@@ -356,6 +377,606 @@ class Dashboard extends CI_Controller
         } else {
             $this->ubah_password();
         }
+    }
+
+
+    // Di dalam kontroler Dashboard
+    public function download_pdf($id)
+    {
+        // Load library mPDF
+
+        // Buat instance mPDF
+        $mpdf = new \Mpdf\Mpdf();
+
+        $data = '';
+
+        // echo "1";
+        // die;
+        // Load library mPDF
+        // $this->load->library('pdf');
+
+        // Buat instance mPDF
+        $mpdf = new \Mpdf\Mpdf();
+        // Buat tabel HTML berdasarkan data yang diambil
+
+        // Ambil data dari objek track_users
+        $track_userss =  $this->mu->track_user($id); // Sesuaikan dengan model Anda
+
+
+        $ket = 'Laporan Tanggal Pendaftaran  ' . date("Y-m-d", strtotime($track_userss[0]->tanggal_jam_pasien_masuk));
+
+        foreach ($track_userss as $key => $track_users) {
+
+            $data = '
+            <div class="header">
+    <table width="100%" class="headers table-header">
+        <tr>
+            <td width="20%" align="center" valign="middle">
+                <div align="center">
+                    <img src="' . base_url('assets/back/img/logo-back-preview.png') . '" class="image_report" style="float:left; max-width: 100px; width:100px;" class="image_report">
+                </div>
+            </td>
+            <td width="64%" align="center" style="text-align:center;">
+                <div align="center" class="nama_profil" style="color: black !important; ">
+                    <p style="text-align:center"><span style="font-size:11px">YAYASAN PELAYANAN KESEHATAN BALA KESELAMATAN (YPKBK)</span></p>
+                    <p style="text-align:center"><span style="font-size:24px"><strong>RUMAH SAKIT "WILLIAM BOOTH"</strong></span><br />
+                        <span style="font-size:10px">Jl. Diponegoro No. 34 Surabaya 60241, Telp. 031-5678917, Fax: 031-5624868&nbsp;<br />
+                        NPWP : 31.650.899.3-423.000</span>
+                    </p>
+                </div>
+            </td>
+            <td width="20%" align="center" valign="middle">
+                <div align="center">
+                    <img src="' . base_url('assets/back/img/logo-right.png') . '" class="image_report" style="float:left; max-width: 100px; width:100px;" class="image_report">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3" style="border-top: 1px solid black;"></td>
+        </tr>
+        <tr>
+            <td align="center" valign="middle" class="judul-laporan-td" colspan="3">
+                <div align="center">
+                    <h3 style="color:black"><b>' . $ket . '</b></h3>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td align="center" valign="middle" class="" colspan="3">
+                <div align="center">
+                    <font color="black"></font>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+ <table>
+     <tr>
+         <td style="width: 200px; padding-top: 7px;">
+             <label for="file" style="text-align: center;">Nomor Rekam Medik</label>
+         </td>
+         <td style="width: 500px; padding-left:8px;">
+             ' . $track_users->no_rekam_medik . '
+         </td>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Tanggal MRS</label>
+         </td>
+         <td style="width: 200px; padding-left:8px;">
+             ' . date("Y-m-d", strtotime($track_users->tanggal_jam_pasien_masuk)) . '
+         </td>
+     </tr>
+     <tr>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Nama Pasien</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->nama_pasien . '
+         </td>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Dokter Jaga IGD</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->dokter_jaga_igd . '
+         </td>
+     </tr>
+     <tr>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Diagnosa</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->diagnosa_primer . '
+         </td>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Diagnosa Tambahan</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->diagnosa_tambahan . '
+         </td>
+     </tr>
+     <tr>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Diagnosa Sekunder</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->diagnosa_sekunder . '
+         </td>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Tekanan Darah</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->tekanan_darah . '
+         </td>
+     </tr>
+     <tr>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Detak Nadi</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->detak_nadi . '
+         </td>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Pernafasan</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->pernafasan . '
+         </td>
+     </tr>
+     <tr>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Suhu Tubuh</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->suhu_tubuh . '
+         </td>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Tinggi Badan</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->tinggi_badan . '
+         </td>
+     </tr>
+     <tr>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Berat Badan</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->berat_badan . '
+         </td>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">GCS</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->GCS . '
+         </td>
+     </tr>
+     <tr>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Lingkar Kepala (LK)</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->LK . '
+         </td>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Lingkar Lengan (LL)</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->LL . '
+         </td>
+     </tr>
+     <tr>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Lingkar Dada (LD)</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->LD . '
+         </td>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Keluhan Utama</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->keluhan_utama . '
+         </td>
+     </tr>
+     <tr>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Anamnesis</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->anamnesis . '
+         </td>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Riwayat Penyakit Dahulu</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->riwayatpenyakit_terdahulu . '
+         </td>
+     </tr>
+     <tr>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Riwayat Alergi Obat</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->riwayat_alergi_obat . '
+         </td>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Riwayat Alergi Makanan</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->riwayat_alergi_makanan . '
+         </td>
+     </tr>
+     <tr>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Tindakan Medis</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->tindakan_medis . '
+         </td>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Konsultasi Dokter Spesialis</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->konsultasi_dokter_spesialis . '
+         </td>
+     </tr>
+     
+     
+     
+     <tr>
+     <td style="width: 100px;height:100px; padding-top: 7px;">
+       <label for="file">Tindakan Di IGD</label>
+     <td style="width: 200px;" style="padding-bottom:5px">
+            ' . $track_users->tindakan_di_igd . '
+     </td>
+     </td>
+     <td style="width: 100px;padding-top: 7px;">
+       <label for="file"></label>
+     <td style="width: 200px;" style="padding-bottom:5px">
+       
+     </td>
+     </td>
+   </tr>
+
+   
+   <tr>
+   <td style="width: 100px;height:100px; padding-top: 7px;">
+     <label for="file">Keterangan</label>
+   <td style="width: 200px;" style="padding-bottom:5px">
+         ' .  $track_users->keterangan . '
+   </td>
+   </td>
+   <td style="width: 100px;padding-top: 7px;">
+     <label for="file"></label>
+   <td style="width: 200px;" style="padding-bottom:5px">
+
+   </td>
+   </td>
+ </tr>
+
+
+ <tr>
+ <td style="width: 100px;height:100px; padding-top: 7px;">
+   <label for="file">Jam Pindah</label>
+ <td style="width: 200px;" style="padding-bottom:5px">
+    ' . $track_users->jam_pindah . '
+ </td>
+ </td>
+ <td style="width: 100px;padding-top: 7px;">
+   <label for="file"></label>
+ <td style="width: 200px;" style="padding-bottom:5px">
+   
+ </td>
+ </td>
+</tr>
+</tr>
+</table>
+     ';
+            # code...
+        }
+
+
+        // Tulis konten ke PDF
+        $mpdf->WriteHTML($data);
+
+        $namaFile = $track_userss[0]->no_pendaftaran . ' - ' . $track_userss[0]->no_rekam_medik;
+
+        // Keluarkan PDF sebagai unduhan
+        $mpdf->Output($namaFile . '.pdf', 'D');
+    }
+
+    public function print_preview($id)
+    {
+        $data = '';
+
+        // echo "1";
+        // die;
+        // Load library mPDF
+        // $this->load->library('pdf');
+
+        // Buat instance mPDF
+        $mpdf = new \Mpdf\Mpdf();
+        // Buat tabel HTML berdasarkan data yang diambil
+
+        // Ambil data dari objek track_users
+        $track_userss =  $this->mu->track_user($id); // Sesuaikan dengan model Anda
+
+
+        $ket = 'Laporan Tanggal Pendaftaran  ' . date("Y-m-d", strtotime($track_userss[0]->tanggal_jam_pasien_masuk));
+
+        foreach ($track_userss as $key => $track_users) {
+
+            $data = '
+            <div class="header">
+    <table width="100%" class="headers table-header">
+        <tr>
+            <td width="20%" align="center" valign="middle">
+                <div align="center">
+                    <img src="' . base_url('assets/back/img/logo-back-preview.png') . '" class="image_report" style="float:left; max-width: 100px; width:100px;" class="image_report">
+                </div>
+            </td>
+            <td width="64%" align="center" style="text-align:center;">
+                <div align="center" class="nama_profil" style="color: black !important; ">
+                    <p style="text-align:center"><span style="font-size:11px">YAYASAN PELAYANAN KESEHATAN BALA KESELAMATAN (YPKBK)</span></p>
+                    <p style="text-align:center"><span style="font-size:24px"><strong>RUMAH SAKIT "WILLIAM BOOTH"</strong></span><br />
+                        <span style="font-size:10px">Jl. Diponegoro No. 34 Surabaya 60241, Telp. 031-5678917, Fax: 031-5624868&nbsp;<br />
+                        NPWP : 31.650.899.3-423.000</span>
+                    </p>
+                </div>
+            </td>
+            <td width="20%" align="center" valign="middle">
+                <div align="center">
+                    <img src="' . base_url('assets/back/img/logo-right.png') . '" class="image_report" style="float:left; max-width: 100px; width:100px;" class="image_report">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3" style="border-top: 1px solid black;"></td>
+        </tr>
+        <tr>
+            <td align="center" valign="middle" class="judul-laporan-td" colspan="3">
+                <div align="center">
+                    <h3 style="color:black"><b>' . $ket . '</b></h3>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td align="center" valign="middle" class="" colspan="3">
+                <div align="center">
+                    <font color="black"></font>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+ <table>
+     <tr>
+         <td style="width: 200px; padding-top: 7px;">
+             <label for="file" style="text-align: center;">Nomor Rekam Medik</label>
+         </td>
+         <td style="width: 500px; padding-left:8px;">
+             ' . $track_users->no_rekam_medik . '
+         </td>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Tanggal MRS</label>
+         </td>
+         <td style="width: 200px; padding-left:8px;">
+             ' . date("Y-m-d", strtotime($track_users->tanggal_jam_pasien_masuk)) . '
+         </td>
+     </tr>
+     <tr>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Nama Pasien</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->nama_pasien . '
+         </td>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Dokter Jaga IGD</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->dokter_jaga_igd . '
+         </td>
+     </tr>
+     <tr>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Diagnosa</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->diagnosa_primer . '
+         </td>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Diagnosa Tambahan</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->diagnosa_tambahan . '
+         </td>
+     </tr>
+     <tr>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Diagnosa Sekunder</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->diagnosa_sekunder . '
+         </td>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Tekanan Darah</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->tekanan_darah . '
+         </td>
+     </tr>
+     <tr>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Detak Nadi</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->detak_nadi . '
+         </td>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Pernafasan</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->pernafasan . '
+         </td>
+     </tr>
+     <tr>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Suhu Tubuh</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->suhu_tubuh . '
+         </td>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Tinggi Badan</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->tinggi_badan . '
+         </td>
+     </tr>
+     <tr>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Berat Badan</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->berat_badan . '
+         </td>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">GCS</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->GCS . '
+         </td>
+     </tr>
+     <tr>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Lingkar Kepala (LK)</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->LK . '
+         </td>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Lingkar Lengan (LL)</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->LL . '
+         </td>
+     </tr>
+     <tr>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Lingkar Dada (LD)</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->LD . '
+         </td>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Keluhan Utama</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->keluhan_utama . '
+         </td>
+     </tr>
+     <tr>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Anamnesis</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->anamnesis . '
+         </td>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Riwayat Penyakit Dahulu</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->riwayatpenyakit_terdahulu . '
+         </td>
+     </tr>
+     <tr>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Riwayat Alergi Obat</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->riwayat_alergi_obat . '
+         </td>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Riwayat Alergi Makanan</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->riwayat_alergi_makanan . '
+         </td>
+     </tr>
+     <tr>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Tindakan Medis</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->tindakan_medis . '
+         </td>
+         <td style="width: 100px;padding-top: 7px;">
+             <label for="file">Konsultasi Dokter Spesialis</label>
+         </td>
+         <td style="width: 200px;padding-left:8px;">
+             ' . $track_users->konsultasi_dokter_spesialis . '
+         </td>
+     </tr>
+     
+     
+     
+     <tr>
+     <td style="width: 100px;height:100px; padding-top: 7px;">
+       <label for="file">Tindakan Di IGD</label>
+     <td style="width: 200px;" style="padding-bottom:5px">
+            ' . $track_users->tindakan_di_igd . '
+     </td>
+     </td>
+     <td style="width: 100px;padding-top: 7px;">
+       <label for="file"></label>
+     <td style="width: 200px;" style="padding-bottom:5px">
+       
+     </td>
+     </td>
+   </tr>
+
+   
+   <tr>
+   <td style="width: 100px;height:100px; padding-top: 7px;">
+     <label for="file">Keterangan</label>
+   <td style="width: 200px;" style="padding-bottom:5px">
+         ' .  $track_users->keterangan . '
+   </td>
+   </td>
+   <td style="width: 100px;padding-top: 7px;">
+     <label for="file"></label>
+   <td style="width: 200px;" style="padding-bottom:5px">
+
+   </td>
+   </td>
+ </tr>
+
+
+ <tr>
+ <td style="width: 100px;height:100px; padding-top: 7px;">
+   <label for="file">Jam Pindah</label>
+ <td style="width: 200px;" style="padding-bottom:5px">
+    ' . $track_users->jam_pindah . '
+ </td>
+ </td>
+ <td style="width: 100px;padding-top: 7px;">
+   <label for="file"></label>
+ <td style="width: 200px;" style="padding-bottom:5px">
+   
+ </td>
+ </td>
+</tr>
+</tr>
+</table>
+     ';
+            # code...
+        }
+
+        // Tulis konten ke PDF
+        $mpdf->WriteHTML($data);
+
+        // Tampilkan preview PDF
+        $mpdf->Output();
     }
 
     public function track($id)

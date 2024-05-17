@@ -31,11 +31,11 @@
 
 
 
-                <form method="POST" action="<?= site_url('user/Dashboard/buat_tiket_action'); ?>" enctype="multipart/form-data">
+                <form method="POST" action="" enctype="multipart/form-data">
                   <?php foreach ($track_user as $key => $track_users) {
                     # code...
                   ?>
-                    <table >
+                    <table>
                       <tr>
                         <td style="width: 200px; padding-top: 7px;">
                           <label for="file" style="text-align: center;">Nomor Rekam Medik</label>
@@ -382,7 +382,7 @@
                         </td>
                         </td>
                       </tr>
-                      
+
 
                       <tr>
                         <td style="width: 100px;height:100px; padding-top: 7px;">
@@ -427,7 +427,9 @@
                   <!-- Sisipkan tombol submit dan reset di luar tabel -->
                   <div class="form-group row justify-content-end ml-5">
                     <div class="col-sm-10">
-                      <button type="button" class="btn btn-primary">Print</button>
+                      <button type="button" class="btn btn-success" id="downloadButton">Download</button>
+                      <button type="button" class="btn btn-primary" id="printButton">Print Preview</button>
+
                       <button type="reset" class="btn btn-danger">Back</button>
                     </div>
                   </div>
@@ -435,9 +437,9 @@
 
                 <!-- <div class="btn btn-danger mb-3 mt-3"><?= date('l, d M Y', strtotime($track_userss->tanggal_jam_pasien_masuk)) ?> -->
               </div>
-              <button type="button" class="btn btn-info" data-toggle="modal" data-target="#confirmationModal">
+              <!-- <button type="button" class="btn btn-info" data-toggle="modal" data-target="#confirmationModal">
                 Konfirmasi
-              </button>
+              </button> -->
           </div>
 
 
@@ -464,7 +466,7 @@
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <form method="POST" action="<?= site_url('user/Dashboard/konfirmasi/' . $track_users->ID_TIKETS) ?>">
+          <form method="POST" action="<?= site_url('user/Dashboard/konfirmasi/' . $track_users->id) ?>">
             <div class="modal-body">
               <label class=" col-form-label">User Pengkonfirmasi</label>
 
@@ -498,6 +500,26 @@
   $('#confirmButton').on('click', function() {
     // Buka modal ketika tombol diklik
     $('#confirmationModal').modal('show');
+  });
+
+
+ var id = <?php echo $track_users->id; ?> // atau var id = someVariable;
+
+    // Tangkap acara klik pada tombol download
+    $('#downloadButton').on('click', function() {
+    // Redirect user ke fungsi download
+    window.location.href = '<?= site_url('user/Dashboard/download_pdf') ?>' + '/' + id;  
+  
+  });
+
+  var id = <?php echo $track_users->id; ?> // atau var id = someVariable;
+
+  // Tangkap acara klik pada tombol print
+  $('#printButton').on('click', function() {
+    // Buka modal ketika tombol diklik
+    window.open('<?= site_url('user/Dashboard/print_preview') ?>' + '/' + id, '_blank');
+  
+  
   });
 
   // Menginisialisasi Select2 saat modal ditampilkan
