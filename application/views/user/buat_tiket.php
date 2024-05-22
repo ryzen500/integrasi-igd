@@ -94,15 +94,15 @@
 
 
 
-           
-              <div class="form-group row ml-5 mr-5">
-                  <label for="diagnosa_tambahan" class="col-sm-2 col-form-label">Diagnosa Tambahan</label>
-                  <div class="col-sm-10">
-                    <input class="form-control" id="diagnosa_tambahan" name="diagnosa_tambahan" value=""/>
 
-                    <?= form_error('diagnosa_tambahan', '<small class="text-danger pl-3">', '</small>') ?>
-                  </div>
+              <!-- <div class="form-group row ml-5 mr-5">
+                <label for="diagnosa_tambahan" class="col-sm-2 col-form-label">Diagnosa Tambahan</label>
+                <div class="col-sm-10">
+                  <input class="form-control" id="diagnosa_tambahan" name="diagnosa_tambahan" value="" />
+
+                  <?= form_error('diagnosa_tambahan', '<small class="text-danger pl-3">', '</small>') ?>
                 </div>
+              </div> -->
 
 
 
@@ -201,6 +201,15 @@
                   <input class="form-control" id="gcs" name="GCS" value="" />
 
                   <?= form_error('GCS', '<small class="text-danger pl-3">', '</small>') ?>
+                </div>
+
+
+                <label for="spo2" class="col-sm-2 col-form-label" style="text-align: center;">SPO2 (1)</label>
+
+                <div class="col-sm-2">
+                  <input class="form-control" type="number" id="spo2" name="spo2" value="" placeholder="SPO2 (1)" />
+
+                  <?= form_error('spo2', '<small class="text-danger pl-3">', '</small>') ?>
                 </div>
                 <!--  -->
               </div>
@@ -316,11 +325,19 @@
               </div>
 
 
+              <div class="form-group row ml-5 mr-5">
+                <label for="tindakan_di_igd" class="col-sm-2 col-form-label">Hasil Penunjang<sup style="color: red;">*</sup></label>
+                <div class="col-sm-10">
+                  <textarea class="form-control" id="hasil_penunjang" name="hasil_penunjang"></textarea>
+                  <small class="text-danger pl-3" id="form-error"></small>
+                </div>
+              </div>
+
 
               <div class="form-group row ml-5 mr-5">
                 <label for="keterangan" class="col-sm-2 col-form-label">Keterangan Pasien<sup style="color: red;">*</sup></label>
                 <div class="col-sm-10">
-                  <input class="form-control" id="keterangan" name="keterangan" value=""/>
+                  <input class="form-control" id="keterangan" name="keterangan" value="" />
                   <?= form_error('keterangan', '<small class="text-danger pl-3">', '</small>') ?>
                 </div>
               </div>
@@ -368,11 +385,11 @@
     $(document).ready(function() {
       let fileUploadIndex = 1; // Track the file upload count
 
-      // var url = 'http://192.168.30.194/helpdesk-api-dashboard/data-dropdown.php';
+      var url = 'http://192.168.30.194/helpdesk-api-dashboard/panggilDataPendaftaran.php';
 
-      var url = 'http://localhost/helpdesk-api-dashboard/panggilDataPendaftaran.php';
+      // var url = 'http://helpdesk.myftp.org:998/helpdesk-api-dashboard/panggilDataPendaftaran.php';
 
-      var divisi_pelapor = 'http://localhost/helpdesk-api-dashboard/data-dropdowndokter.php';
+      var divisi_pelapor = 'http://helpdesk.myftp.org:998/helpdesk-api-dashboard/panggilDataPendaftaran.php';
 
 
 
@@ -418,7 +435,10 @@
                     additionaldetak_nadi = '',
                     additionalpernafasan = '',
                     additionalsuhutubuh = '',
-                    additionaldpjp_id = ''
+                    additionaldpjp_id = '',
+                    additional_spo = '',
+                    additional_anamnesis = ''
+
 
 
 
@@ -450,6 +470,11 @@
 
                   additionaldpjp_id = item.child_triase.map(function(triase) {
                     return `${triase.gelardepan} ${triase.nama_pegawai} ${triase.gelarbelakang_nama}`;
+                  }).join(', ');
+
+
+                  additional_spo = item.child_triase.map(function(triase) {
+                    return `${triase.spo}`;
                   }).join(', ');
 
 
@@ -488,9 +513,26 @@
 
 
                   // Menampilkan additionalTriase di konsol browser
-                  console.log("additionalTriase:", additionaltekanan_darah);
+                  // console.log("anamnesa :", keterangananamesa);
                 }
 
+                // Penunjang 
+
+                var content = '';
+                var columnSplit = false;
+
+                let indexs = 0;
+                item.chilDataPenunjang.forEach(function(items, index) {
+                  indexs++;
+                  if (items.separator) {
+                    content += '\n';
+                    columnSplit = true;
+                  } else {
+                    content += indexs + ". (" + items.kelompoktindakanbpjs_nama + ") " + items.daftartindakan_nama + "\n";
+                  }
+                });
+
+                $('#hasil_penunjang').val(content.trim());
 
                 // Anamnesa
                 if (item.child_anamnesa && item.child_anamnesa.length > 0) {
@@ -501,6 +543,18 @@
                     return anamnesa.riwayatpenyakitterdahulu;
                   }).join(', ');
 
+
+                  keterangananamesa = item.child_anamnesa.map(function(anamnesa) {
+                    console.log("Anamnesa ", anamnesa);
+
+                    // Menghapus tag HTML
+                    let cleanedText = anamnesa.keterangananamesa.replace(/<\/?[^>]+(>|$)/g, "");
+
+                    // Menghilangkan karakter khusus (di sini, kita menghilangkan koma ganda)
+                    cleanedText = cleanedText.replace(/[^\w\s]/g, "");
+
+                    return cleanedText;
+                  }).join(', ');
 
                   riwayatalergiobat = item.child_anamnesa.map(function(anamnesa) {
                     return anamnesa.riwayatalergiobat;
@@ -527,7 +581,7 @@
                   }).join(', ');
 
 
-                  console.log(riwayatalergiobat);
+                  console.log(keterangananamesa);
                 }
 
 
@@ -544,10 +598,12 @@
                 $("#dokter_jaga_igd").val(additionaldpjp_id);
                 $("#tinggi_badan").val(additionaltinggibadan);
                 $("#berat_badan").val(additionalberatbadan);
+                $("#anamnesis").val(keterangananamesa);
                 $("#gcs").val(additionalgcs);
                 $("#lk").val(additional_lk);
                 $("#ll").val(additional_ll);
                 $("#ld").val(additional_ld);
+                $("#spo2").val(additional_spo);
                 if (CKEDITOR.instances.tindakan_medis) {
                   CKEDITOR.instances.tindakan_medis.destroy(); // Hancurkan instance CKEditor
                   $("#tindakan_medis").val(tindakanmedis);

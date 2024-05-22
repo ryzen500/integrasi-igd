@@ -44,7 +44,7 @@
                         </td>
                         </td>
                         <td style="width: 100px;padding-top: 7px;">
-                          <label for="file">Tanggal MRS</label>
+                          <label for="file">Tanggal Pendaftaran / Register</label>
                         <td style="width: 200px; padding-left:8px;">
                           <?php echo date("Y-m-d", strtotime($track_users->tanggal_jam_pasien_masuk));  ?>
                         </td>
@@ -83,7 +83,7 @@
                       <!-- Space -->
                       <tr>
                         <td style="width: 100px;padding-top: 7px;">
-                          <label for="file">Diagnosa</label>
+                          <label for="file">Diagnosa Utama</label>
                         <td style="width: 200px;" style="padding-bottom:5px">
                           <?php echo $track_users->diagnosa_primer;  ?>
                         </td>
@@ -95,20 +95,7 @@
                         </td>
                         </td>
                       </tr>
-                      <tr>
-                        <td style="width: 100px;height:100px; padding-top: 7px;">
-                          <label for="file">Diagnosa Tambahan</label>
-                        <td style="width: 200px;" style="padding-bottom:5px">
-                          <?php echo $track_users->diagnosa_tambahan;  ?>
-                        </td>
-                        </td>
-                        <td style="width: 100px;padding-top: 7px;">
-                          <label for="file"></label>
-                        <td style="width: 200px;" style="padding-bottom:5px">
-                          <?php echo "";  ?>
-                        </td>
-                        </td>
-                      </tr>
+
                       <!-- Space -->
                       <tr>
                         <td style="width: 100px;padding-top: 7px;">
@@ -198,6 +185,13 @@
                           <label for="file">GCS</label>
                         <td style="width: 200px;" style="padding-bottom:5px;padding-left:8px;">
                           <?php echo $track_users->GCS;  ?>
+                        </td>
+                        </td>
+
+                        <td style="width: 100px;padding-top: 7px;">
+                          <label for="file">SPO2</label>
+                        <td style="width: 200px;" style="padding-bottom:5px;padding-left:8px;">
+                          <?php echo $track_users->spo;  ?>
                         </td>
                         </td>
                       </tr>
@@ -402,9 +396,39 @@
 
 
 
+
+                      <tr>
+                        <td style="width: 100px; height: 100px; padding-top: 7px;">
+                          <label for="file">Hasil Penunjang</label>
+                        </td>
+                        <td style="width: 200px; padding-bottom: 5px; vertical-align: top;">
+                          <?php
+                          // Assuming $track_users->hasil_penunjang contains the string with penunjang items
+                          $penunjangString = $track_users->hasil_penunjang;
+
+                          // Split the string by the numbers followed by a dot and space
+                          $penunjangItems = preg_split('/(?=\d+\.\s)/', $penunjangString, -1, PREG_SPLIT_NO_EMPTY);
+
+                          foreach ($penunjangItems as $item) {
+                            echo trim($item) . "<br/>";
+                          }
+                          ?>
+                        </td>
+                        <td style="width: 100px; padding-top: 7px;">
+                          <label for="file"></label>
+                        </td>
+                        <td style="width: 200px; padding-bottom: 5px;">
+                          <?php echo ""; ?>
+                        </td>
+                      </tr>
+
+
+
+
+
                       <tr>
                         <td style="width: 100px;height:100px; padding-top: 7px;">
-                          <label for="file">Jam Pindah</label>
+                          <label for="file">Jam pindah / KRS / MRS</label>
                         <td style="width: 200px;" style="padding-bottom:5px">
                           <?php echo $track_users->jam_pindah;  ?>
                         </td>
@@ -503,13 +527,13 @@
   });
 
 
- var id = <?php echo $track_users->id; ?> // atau var id = someVariable;
+  var id = <?php echo $track_users->id; ?> // atau var id = someVariable;
 
-    // Tangkap acara klik pada tombol download
-    $('#downloadButton').on('click', function() {
+  // Tangkap acara klik pada tombol download
+  $('#downloadButton').on('click', function() {
     // Redirect user ke fungsi download
-    window.location.href = '<?= site_url('user/Dashboard/download_pdf') ?>' + '/' + id;  
-  
+    window.location.href = '<?= site_url('user/Dashboard/download_pdf') ?>' + '/' + id;
+
   });
 
   var id = <?php echo $track_users->id; ?> // atau var id = someVariable;
@@ -518,8 +542,8 @@
   $('#printButton').on('click', function() {
     // Buka modal ketika tombol diklik
     window.open('<?= site_url('user/Dashboard/print_preview') ?>' + '/' + id, '_blank');
-  
-  
+
+
   });
 
   // Menginisialisasi Select2 saat modal ditampilkan
