@@ -385,9 +385,9 @@
     $(document).ready(function() {
       let fileUploadIndex = 1; // Track the file upload count
 
-      var url = 'http://192.168.30.194/helpdesk-api-dashboard/panggilDataPendaftaran.php';
+      // var url = 'http://192.168.30.194/helpdesk-api-dashboard/panggilDataPendaftaran.php';
 
-      // var url = 'http://helpdesk.myftp.org:998/helpdesk-api-dashboard/panggilDataPendaftaran.php';
+      var url = 'http://helpdesk.myftp.org:998/helpdesk-api-dashboard/panggilDataPendaftaran.php';
 
       var divisi_pelapor = 'http://helpdesk.myftp.org:998/helpdesk-api-dashboard/panggilDataPendaftaran.php';
 
