@@ -10,7 +10,8 @@ class Dashboard extends CI_Controller
     function __construct()
     {
         parent::__construct();
-        belum_login('user/dashboard');
+        // belum_login('user/dashboard');
+        $this->load->library('session');
         $this->load->helper('my_helper'); // Load helper global
         $this->load->model('Mlogin', 'ml');
         $this->load->model('user/Mtuser', 'mu');
@@ -24,29 +25,30 @@ class Dashboard extends CI_Controller
 
 
 
-	public function index()
-	{
-		$data['laporantiket'] = $this->mu->laporan_masuk();
-		$data['laporanyangdibuatsaya'] = $this->mu->laporan_saya();
-		$data['laporanuser'] = $this->mu->laporanuser();
+    public function index()
+    {
+        $id = $this->session->userdata('id_user');
+        $data['laporantiket'] = $this->mu->laporan_masuk();
+        $data['laporanyangdibuatsaya'] = $this->mu->laporan_saya($id);
+        $data['laporanuser'] = $this->mu->laporanuser();
         $data['laporandokter'] = $this->mu->laporandokter();
         $data['laporan_ppa'] = $this->mu->laporan_ppa();
         $data['pendaftaran_terakhir'] = $this->mu->pendaftaran_terakhir();
 
         // $data['diajukan'] = $this->md->diajukan();
-		// $data['dalam_proses'] = $this->md->dalam_proses();
-		// $data['sudah_ditangani'] = $this->md->sudah_ditangani();
-		// $data['tiket_diajukan'] = $this->md->tiket_diajukan();
-		// $data['tiket_selesai'] = $this->md->tiket_selesai();
+        // $data['dalam_proses'] = $this->md->dalam_proses();
+        // $data['sudah_ditangani'] = $this->md->sudah_ditangani();
+        // $data['tiket_diajukan'] = $this->md->tiket_diajukan();
+        // $data['tiket_selesai'] = $this->md->tiket_selesai();
 
-		$this->template->load('user/template', 'user/dashboard', $data);
-	}
+        $this->template->load('user/template', 'user/dashboard', $data);
+    }
     public function index_per_user()
     {
 
         $id = $this->session->userdata('id_user');
         // var_dump($this->session->userdata('nama_user'));die;
-        $data['user'] = $this->mu->get_profil($id)->row_array();
+        // $data['user'] = $this->mu->data_saya($id)->row_array();
         $data['title'] = ' Data Saya';
         $data['tiket'] = $this->mu->tiket_user_per_user();
         $this->template->load('user/template', 'user/page', $data);
@@ -208,6 +210,8 @@ class Dashboard extends CI_Controller
             $suhu_tubuh = $this->input->post('suhu_tubuh');
             $tinggi_badan = $this->input->post('tinggi_badan');
             $berat_badan = $this->input->post('berat_badan');
+            $spo2 = $this->input->post('spo2');
+            $hasil_penunjang = $this->input->post('hasil_penunjang');
             $GCS = $this->input->post('GCS');
             $LK = $this->input->post('LK');
             $LL = $this->input->post('LL');
@@ -245,9 +249,11 @@ class Dashboard extends CI_Controller
                 'LK' => $LK,
                 'LL' => $LL,
                 'LD' => $LD,
+                'spo' => $spo2,
+                'hasil_penunjang' => $hasil_penunjang,
                 'keluhan_utama' => $keluhan_utama,
                 'anamnesis' => $anamnesis,
-                'riwayat_penyakit_dahulu' => $riwayat_penyakit_dahulu,
+                'riwayatpenyakit_terdahulu' => $riwayat_penyakit_dahulu,
                 'riwayat_alergi_obat' => $riwayat_alergi_obat,
                 'riwayat_alergi_makanan' => $riwayat_alergi_makanan,
                 'tindakan_medis' => $tindakan_medis,
@@ -403,9 +409,26 @@ class Dashboard extends CI_Controller
         $track_userss =  $this->mu->track_user($id); // Sesuaikan dengan model Anda
 
 
-        $ket = 'Laporan Tanggal Pendaftaran  ' . date("Y-m-d", strtotime($track_userss[0]->tanggal_jam_pasien_masuk));
+        $ket = ' Laporan  Pasien IGD  ';
 
+
+
+        $test = [];
         foreach ($track_userss as $key => $track_users) {
+
+            // Assuming $track_users->hasil_penunjang contains the string with penunjang items
+            $penunjangString = $track_users->hasil_penunjang;
+
+            // Split the string by the numbers followed by a dot and space
+            $penunjangItems = preg_split('/(?=\d+\.\s)/', $penunjangString, -1, PREG_SPLIT_NO_EMPTY);
+
+            foreach ($penunjangItems as $item) {
+                $test[] = trim($item);
+            }
+
+            // Join the array items into a single string with <br/> as the separator
+            $testString = implode("<br/>", $test);
+
 
             $data = '
             <div class="header">
@@ -450,7 +473,7 @@ class Dashboard extends CI_Controller
         </tr>
     </table>
 </div>
- <table>
+ <table >
      <tr>
          <td style="width: 200px; padding-top: 7px;">
              <label for="file" style="text-align: center;">Nomor Rekam Medik</label>
@@ -459,20 +482,20 @@ class Dashboard extends CI_Controller
              ' . $track_users->no_rekam_medik . '
          </td>
          <td style="width: 100px;padding-top: 7px;">
-             <label for="file">Tanggal MRS</label>
+             <label for="file">Tanggal Pendaftaran / Register</label>
          </td>
          <td style="width: 200px; padding-left:8px;">
              ' . date("Y-m-d", strtotime($track_users->tanggal_jam_pasien_masuk)) . '
          </td>
      </tr>
      <tr>
-         <td style="width: 100px;padding-top: 7px;">
-             <label for="file">Nama Pasien</label>
+         <td style="width: 100px;">
+             <label for="file">No Pendaftaran</label>
          </td>
          <td style="width: 200px;padding-left:8px;">
-             ' . $track_users->nama_pasien . '
+             ' . $track_users->no_pendaftaran . '
          </td>
-         <td style="width: 100px;padding-top: 7px;">
+         <td style="width: 100px;">
              <label for="file">Dokter Jaga IGD</label>
          </td>
          <td style="width: 200px;padding-left:8px;">
@@ -480,18 +503,26 @@ class Dashboard extends CI_Controller
          </td>
      </tr>
      <tr>
-         <td style="width: 100px;padding-top: 7px;">
-             <label for="file">Diagnosa</label>
+     <td style="width: 100px;">
+     <label for="file">Nama Pasien</label>
+        </td>
+        <td style="width: 200px;padding-left:8px;">
+            ' . $track_users->nama_pasien . '
+        </td>
+         <td style="width: 100px;">
+
          </td>
          <td style="width: 200px;padding-left:8px;">
-             ' . $track_users->diagnosa_primer . '
+
          </td>
-         <td style="width: 100px;padding-top: 7px;">
-             <label for="file">Diagnosa Tambahan</label>
-         </td>
-         <td style="width: 200px;padding-left:8px;">
-             ' . $track_users->diagnosa_tambahan . '
-         </td>
+     </tr>
+     <tr>
+     <td style="width: 100px;">
+     <label for="file">Diagnosa Utama</label>
+    </td>
+    <td style="width: 200px;padding-left:8px;">
+        ' . $track_users->diagnosa_primer . '
+    </td>
      </tr>
      <tr>
          <td style="width: 100px;padding-top: 7px;">
@@ -500,76 +531,100 @@ class Dashboard extends CI_Controller
          <td style="width: 200px;padding-left:8px;">
              ' . $track_users->diagnosa_sekunder . '
          </td>
-         <td style="width: 100px;padding-top: 7px;">
-             <label for="file">Tekanan Darah</label>
-         </td>
-         <td style="width: 200px;padding-left:8px;">
-             ' . $track_users->tekanan_darah . '
-         </td>
      </tr>
      <tr>
-         <td style="width: 100px;padding-top: 7px;">
-             <label for="file">Detak Nadi</label>
-         </td>
-         <td style="width: 200px;padding-left:8px;">
-             ' . $track_users->detak_nadi . '
-         </td>
-         <td style="width: 100px;padding-top: 7px;">
-             <label for="file">Pernafasan</label>
-         </td>
-         <td style="width: 200px;padding-left:8px;">
-             ' . $track_users->pernafasan . '
-         </td>
+     <td>
+     <label for="suhu_tubuh" class="col-sm-2 col-form-label" style="text-align: center;">Tekanan Darah</label>
+     
+     
+     </td>
+     <td>
+     <input class="form-control" style="text-align:center;" id="tekanan_darah" name="tekanan_darah" value="' . $track_users->tekanan_darah . ' " />
+  
+     <label for="tinggi_badan" class="col-sm-2 col-form-label" style="text-align: center;">Detak Nadi</label>
+     
+     &nbsp;
+
+     <input class="form-control" id="tinggi_badan" name="tinggi_badan" value="' . $track_users->detak_nadi  . '" />
+     
+     &nbsp;
+
+     &nbsp;
+     <label for="berat_badan" class="col-sm-2 col-form-label" style="text-align: center;">Pernafasan</label>
+     </td>
+     <td>
+     <input class="form-control" id="berat_badan" name="berat_badan" value="' . $track_users->pernafasan  . '" />
+     </td>
      </tr>
+
+
+
      <tr>
-         <td style="width: 100px;padding-top: 7px;">
-             <label for="file">Suhu Tubuh</label>
-         </td>
-         <td style="width: 200px;padding-left:8px;">
-             ' . $track_users->suhu_tubuh . '
-         </td>
-         <td style="width: 100px;padding-top: 7px;">
-             <label for="file">Tinggi Badan</label>
-         </td>
-         <td style="width: 200px;padding-left:8px;">
-             ' . $track_users->tinggi_badan . '
-         </td>
+     <td>
+     <label for="suhu_tubuh" class="col-sm-2 col-form-label" style="text-align: center;">Suhu Tubuh</label>
+     
+     </td>
+     <td>
+     <input class="form-control" id="suhu_tubuh" name="suhu_tubuh" value="' . $track_users->suhu_tubuh  . '" />
+  
+     <label for="tinggi_badan" class="col-sm-2 col-form-label" style="text-align: center;">Tinggi Badan</label>
+     <input class="form-control" id="tinggi_badan" name="tinggi_badan" value="' . $track_users->tinggi_badan  . '" />
+  
+
+     &nbsp;
+
+     <label for="berat_badan" class="col-sm-2 col-form-label" style="text-align: right;">Berat Badan</label>
+     </td>
+     <td>
+     <input class="form-control" id="berat_badan" name="berat_badan" value="' . $track_users->berat_badan  . '" />
+     </td>
      </tr>
+
+
+
      <tr>
-         <td style="width: 100px;padding-top: 7px;">
-             <label for="file">Berat Badan</label>
-         </td>
-         <td style="width: 200px;padding-left:8px;">
-             ' . $track_users->berat_badan . '
-         </td>
-         <td style="width: 100px;padding-top: 7px;">
+  
+           <td style="width: 100px;padding-top: 7px;">
              <label for="file">GCS</label>
          </td>
          <td style="width: 200px;padding-left:8px;">
              ' . $track_users->GCS . '
+
+         </td>
+             
+       
+         
+         
+             <td style="width: 100px;padding-top: 7px;"> 
+             <label for="spo" class="col-sm-2 col-form-label" style="text-align: center;">SPO2 (1) </label>
+             </td>
+
+         <td>
+         <input class="form-control" id="spo" name="spo" value="' . $track_users->spo  . '" />
          </td>
      </tr>
+
+
+
+
      <tr>
-         <td style="width: 100px;padding-top: 7px;">
-             <label for="file">Lingkar Kepala (LK)</label>
-         </td>
-         <td style="width: 200px;padding-left:8px;">
-             ' . $track_users->LK . '
-         </td>
-         <td style="width: 100px;padding-top: 7px;">
-             <label for="file">Lingkar Lengan (LL)</label>
-         </td>
-         <td style="width: 200px;padding-left:8px;">
-             ' . $track_users->LL . '
-         </td>
+     <td>
+     <label for="suhu_tubuh" class="col-sm-2 col-form-label" style="text-align: center;">Lingkar Kepala (LK) </label>
+     
+     </td>
+     <td>
+     <input class="form-control" id="berat_badan" name="berat_badan" value=" ' . $track_users->LK . '" />
+  
+     <label for="tinggi_badan" class="col-sm-2 col-form-label" style="text-align: center;">Lingkar Lengan (LL) </label>
+     <input class="form-control" id="berat_badan" name="berat_badan" value=" ' . $track_users->LL . '" />
+  
+     <label for="berat_badan" class="col-sm-2 col-form-label" style="text-align: center;"> Lingkar Dada (LD) </label>
+     </td>
+     <td>
+     <input class="form-control" id="berat_badan" name="berat_badan" value=" ' . $track_users->LD . '" />
+     </td>
      </tr>
      <tr>
-         <td style="width: 100px;padding-top: 7px;">
-             <label for="file">Lingkar Dada (LD)</label>
-         </td>
-         <td style="width: 200px;padding-left:8px;">
-             ' . $track_users->LD . '
-         </td>
          <td style="width: 100px;padding-top: 7px;">
              <label for="file">Keluhan Utama</label>
          </td>
@@ -584,12 +639,15 @@ class Dashboard extends CI_Controller
          <td style="width: 200px;padding-left:8px;">
              ' . $track_users->anamnesis . '
          </td>
-         <td style="width: 100px;padding-top: 7px;">
-             <label for="file">Riwayat Penyakit Dahulu</label>
-         </td>
-         <td style="width: 200px;padding-left:8px;">
-             ' . $track_users->riwayatpenyakit_terdahulu . '
-         </td>
+     </tr>
+     <tr>
+     
+     <td style="width: 100px;padding-top: 7px;">
+     <label for="file">Riwayat Penyakit Dahulu</label>
+        </td>
+        <td style="width: 200px;padding-left:8px;">
+            ' . $track_users->riwayatpenyakit_terdahulu . '
+        </td>
      </tr>
      <tr>
          <td style="width: 100px;padding-top: 7px;">
@@ -598,13 +656,17 @@ class Dashboard extends CI_Controller
          <td style="width: 200px;padding-left:8px;">
              ' . $track_users->riwayat_alergi_obat . '
          </td>
-         <td style="width: 100px;padding-top: 7px;">
-             <label for="file">Riwayat Alergi Makanan</label>
-         </td>
-         <td style="width: 200px;padding-left:8px;">
-             ' . $track_users->riwayat_alergi_makanan . '
-         </td>
      </tr>
+     <tr>
+     <td style="width: 100px;padding-top: 7px;">
+     <label for="file">Riwayat Alergi Makanan</label>
+        </td>
+        <td style="width: 200px;padding-left:8px;">
+            ' . $track_users->riwayat_alergi_makanan . '
+        </td>
+     </tr>
+
+     
      <tr>
          <td style="width: 100px;padding-top: 7px;">
              <label for="file">Tindakan Medis</label>
@@ -612,12 +674,16 @@ class Dashboard extends CI_Controller
          <td style="width: 200px;padding-left:8px;">
              ' . $track_users->tindakan_medis . '
          </td>
-         <td style="width: 100px;padding-top: 7px;">
-             <label for="file">Konsultasi Dokter Spesialis</label>
-         </td>
-         <td style="width: 200px;padding-left:8px;">
-             ' . $track_users->konsultasi_dokter_spesialis . '
-         </td>
+     </tr>
+
+     <tr>
+     
+     <td style="width: 100px;padding-top: 7px;">
+     <label for="file">Konsultasi Dokter Spesialis</label>
+        </td>
+        <td style="width: 200px;padding-left:8px;">
+            ' . $track_users->konsultasi_dokter_spesialis . '
+        </td>
      </tr>
      
      
@@ -655,8 +721,23 @@ class Dashboard extends CI_Controller
 
 
  <tr>
+ <td style="width: 100px; height: 100px; padding-top: 7px;">
+   <label for="file">Hasil Penunjang</label>
+ </td>
+ <td style="width: 200px; padding-bottom: 5px; vertical-align: top;">
+   ' . $testString . '
+ </td>
+ <td style="width: 100px; padding-top: 7px;">
+   <label for="file"></label>
+ </td>
+ <td style="width: 200px; padding-bottom: 5px;">
+
+ </td>
+</tr>
+
+ <tr>
  <td style="width: 100px;height:100px; padding-top: 7px;">
-   <label for="file">Jam Pindah</label>
+   <label for="file">Jam pindah / KRS / MRS </label>
  <td style="width: 200px;" style="padding-bottom:5px">
     ' . $track_users->jam_pindah . '
  </td>
@@ -668,16 +749,16 @@ class Dashboard extends CI_Controller
  </td>
  </td>
 </tr>
+
+
 </tr>
 </table>
      ';
             # code...
         }
 
-
         // Tulis konten ke PDF
         $mpdf->WriteHTML($data);
-
         $namaFile = $track_userss[0]->no_pendaftaran . ' - ' . $track_userss[0]->no_rekam_medik;
 
         // Keluarkan PDF sebagai unduhan
@@ -701,9 +782,26 @@ class Dashboard extends CI_Controller
         $track_userss =  $this->mu->track_user($id); // Sesuaikan dengan model Anda
 
 
-        $ket = 'Laporan Tanggal Pendaftaran  ' . date("Y-m-d", strtotime($track_userss[0]->tanggal_jam_pasien_masuk));
+        $ket = ' Laporan  Pasien IGD  ';
 
+
+
+        $test = [];
         foreach ($track_userss as $key => $track_users) {
+
+            // Assuming $track_users->hasil_penunjang contains the string with penunjang items
+            $penunjangString = $track_users->hasil_penunjang;
+
+            // Split the string by the numbers followed by a dot and space
+            $penunjangItems = preg_split('/(?=\d+\.\s)/', $penunjangString, -1, PREG_SPLIT_NO_EMPTY);
+
+            foreach ($penunjangItems as $item) {
+                $test[] = trim($item);
+            }
+
+            // Join the array items into a single string with <br/> as the separator
+            $testString = implode("<br/>", $test);
+
 
             $data = '
             <div class="header">
@@ -748,7 +846,7 @@ class Dashboard extends CI_Controller
         </tr>
     </table>
 </div>
- <table>
+ <table >
      <tr>
          <td style="width: 200px; padding-top: 7px;">
              <label for="file" style="text-align: center;">Nomor Rekam Medik</label>
@@ -757,20 +855,20 @@ class Dashboard extends CI_Controller
              ' . $track_users->no_rekam_medik . '
          </td>
          <td style="width: 100px;padding-top: 7px;">
-             <label for="file">Tanggal MRS</label>
+             <label for="file">Tanggal Pendaftaran / Register</label>
          </td>
          <td style="width: 200px; padding-left:8px;">
              ' . date("Y-m-d", strtotime($track_users->tanggal_jam_pasien_masuk)) . '
          </td>
      </tr>
      <tr>
-         <td style="width: 100px;padding-top: 7px;">
-             <label for="file">Nama Pasien</label>
+         <td style="width: 100px;">
+             <label for="file">No Pendaftaran</label>
          </td>
          <td style="width: 200px;padding-left:8px;">
-             ' . $track_users->nama_pasien . '
+             ' . $track_users->no_pendaftaran . '
          </td>
-         <td style="width: 100px;padding-top: 7px;">
+         <td style="width: 100px;">
              <label for="file">Dokter Jaga IGD</label>
          </td>
          <td style="width: 200px;padding-left:8px;">
@@ -778,18 +876,26 @@ class Dashboard extends CI_Controller
          </td>
      </tr>
      <tr>
-         <td style="width: 100px;padding-top: 7px;">
-             <label for="file">Diagnosa</label>
+     <td style="width: 100px;">
+     <label for="file">Nama Pasien</label>
+        </td>
+        <td style="width: 200px;padding-left:8px;">
+            ' . $track_users->nama_pasien . '
+        </td>
+         <td style="width: 100px;">
+
          </td>
          <td style="width: 200px;padding-left:8px;">
-             ' . $track_users->diagnosa_primer . '
+
          </td>
-         <td style="width: 100px;padding-top: 7px;">
-             <label for="file">Diagnosa Tambahan</label>
-         </td>
-         <td style="width: 200px;padding-left:8px;">
-             ' . $track_users->diagnosa_tambahan . '
-         </td>
+     </tr>
+     <tr>
+     <td style="width: 100px;">
+     <label for="file">Diagnosa Utama</label>
+    </td>
+    <td style="width: 200px;padding-left:8px;">
+        ' . $track_users->diagnosa_primer . '
+    </td>
      </tr>
      <tr>
          <td style="width: 100px;padding-top: 7px;">
@@ -798,76 +904,100 @@ class Dashboard extends CI_Controller
          <td style="width: 200px;padding-left:8px;">
              ' . $track_users->diagnosa_sekunder . '
          </td>
-         <td style="width: 100px;padding-top: 7px;">
-             <label for="file">Tekanan Darah</label>
-         </td>
-         <td style="width: 200px;padding-left:8px;">
-             ' . $track_users->tekanan_darah . '
-         </td>
      </tr>
      <tr>
-         <td style="width: 100px;padding-top: 7px;">
-             <label for="file">Detak Nadi</label>
-         </td>
-         <td style="width: 200px;padding-left:8px;">
-             ' . $track_users->detak_nadi . '
-         </td>
-         <td style="width: 100px;padding-top: 7px;">
-             <label for="file">Pernafasan</label>
-         </td>
-         <td style="width: 200px;padding-left:8px;">
-             ' . $track_users->pernafasan . '
-         </td>
+     <td>
+     <label for="suhu_tubuh" class="col-sm-2 col-form-label" style="text-align: center;">Tekanan Darah</label>
+     
+     
+     </td>
+     <td>
+     <input class="form-control" style="text-align:center;" id="tekanan_darah" name="tekanan_darah" value="' . $track_users->tekanan_darah . ' " />
+  
+     <label for="tinggi_badan" class="col-sm-2 col-form-label" style="text-align: center;">Detak Nadi</label>
+     
+     &nbsp;
+
+     <input class="form-control" id="tinggi_badan" name="tinggi_badan" value="' . $track_users->detak_nadi  . '" />
+     
+     &nbsp;
+
+     &nbsp;
+     <label for="berat_badan" class="col-sm-2 col-form-label" style="text-align: center;">Pernafasan</label>
+     </td>
+     <td>
+     <input class="form-control" id="berat_badan" name="berat_badan" value="' . $track_users->pernafasan  . '" />
+     </td>
      </tr>
+
+
+
      <tr>
-         <td style="width: 100px;padding-top: 7px;">
-             <label for="file">Suhu Tubuh</label>
-         </td>
-         <td style="width: 200px;padding-left:8px;">
-             ' . $track_users->suhu_tubuh . '
-         </td>
-         <td style="width: 100px;padding-top: 7px;">
-             <label for="file">Tinggi Badan</label>
-         </td>
-         <td style="width: 200px;padding-left:8px;">
-             ' . $track_users->tinggi_badan . '
-         </td>
+     <td>
+     <label for="suhu_tubuh" class="col-sm-2 col-form-label" style="text-align: center;">Suhu Tubuh</label>
+     
+     </td>
+     <td>
+     <input class="form-control" id="suhu_tubuh" name="suhu_tubuh" value="' . $track_users->suhu_tubuh  . '" />
+  
+     <label for="tinggi_badan" class="col-sm-2 col-form-label" style="text-align: center;">Tinggi Badan</label>
+     <input class="form-control" id="tinggi_badan" name="tinggi_badan" value="' . $track_users->tinggi_badan  . '" />
+  
+
+     &nbsp;
+
+     <label for="berat_badan" class="col-sm-2 col-form-label" style="text-align: right;">Berat Badan</label>
+     </td>
+     <td>
+     <input class="form-control" id="berat_badan" name="berat_badan" value="' . $track_users->berat_badan  . '" />
+     </td>
      </tr>
+
+
+
      <tr>
-         <td style="width: 100px;padding-top: 7px;">
-             <label for="file">Berat Badan</label>
-         </td>
-         <td style="width: 200px;padding-left:8px;">
-             ' . $track_users->berat_badan . '
-         </td>
-         <td style="width: 100px;padding-top: 7px;">
+  
+           <td style="width: 100px;padding-top: 7px;">
              <label for="file">GCS</label>
          </td>
          <td style="width: 200px;padding-left:8px;">
              ' . $track_users->GCS . '
+
+         </td>
+             
+       
+         
+         
+             <td style="width: 100px;padding-top: 7px;"> 
+             <label for="spo" class="col-sm-2 col-form-label" style="text-align: center;">SPO2 (1) </label>
+             </td>
+
+         <td>
+         <input class="form-control" id="spo" name="spo" value="' . $track_users->spo  . '" />
          </td>
      </tr>
+
+
+
+
      <tr>
-         <td style="width: 100px;padding-top: 7px;">
-             <label for="file">Lingkar Kepala (LK)</label>
-         </td>
-         <td style="width: 200px;padding-left:8px;">
-             ' . $track_users->LK . '
-         </td>
-         <td style="width: 100px;padding-top: 7px;">
-             <label for="file">Lingkar Lengan (LL)</label>
-         </td>
-         <td style="width: 200px;padding-left:8px;">
-             ' . $track_users->LL . '
-         </td>
+     <td>
+     <label for="suhu_tubuh" class="col-sm-2 col-form-label" style="text-align: center;">Lingkar Kepala (LK) </label>
+     
+     </td>
+     <td>
+     <input class="form-control" id="berat_badan" name="berat_badan" value=" ' . $track_users->LK . '" />
+  
+     <label for="tinggi_badan" class="col-sm-2 col-form-label" style="text-align: center;">Lingkar Lengan (LL) </label>
+     <input class="form-control" id="berat_badan" name="berat_badan" value=" ' . $track_users->LL . '" />
+  
+     <label for="berat_badan" class="col-sm-2 col-form-label" style="text-align: center;"> Lingkar Dada (LD) </label>
+     </td>
+     <td>
+     <input class="form-control" id="berat_badan" name="berat_badan" value=" ' . $track_users->LD . '" />
+     </td>
      </tr>
      <tr>
-         <td style="width: 100px;padding-top: 7px;">
-             <label for="file">Lingkar Dada (LD)</label>
-         </td>
-         <td style="width: 200px;padding-left:8px;">
-             ' . $track_users->LD . '
-         </td>
          <td style="width: 100px;padding-top: 7px;">
              <label for="file">Keluhan Utama</label>
          </td>
@@ -882,12 +1012,15 @@ class Dashboard extends CI_Controller
          <td style="width: 200px;padding-left:8px;">
              ' . $track_users->anamnesis . '
          </td>
-         <td style="width: 100px;padding-top: 7px;">
-             <label for="file">Riwayat Penyakit Dahulu</label>
-         </td>
-         <td style="width: 200px;padding-left:8px;">
-             ' . $track_users->riwayatpenyakit_terdahulu . '
-         </td>
+     </tr>
+     <tr>
+     
+     <td style="width: 100px;padding-top: 7px;">
+     <label for="file">Riwayat Penyakit Dahulu</label>
+        </td>
+        <td style="width: 200px;padding-left:8px;">
+            ' . $track_users->riwayatpenyakit_terdahulu . '
+        </td>
      </tr>
      <tr>
          <td style="width: 100px;padding-top: 7px;">
@@ -896,13 +1029,17 @@ class Dashboard extends CI_Controller
          <td style="width: 200px;padding-left:8px;">
              ' . $track_users->riwayat_alergi_obat . '
          </td>
-         <td style="width: 100px;padding-top: 7px;">
-             <label for="file">Riwayat Alergi Makanan</label>
-         </td>
-         <td style="width: 200px;padding-left:8px;">
-             ' . $track_users->riwayat_alergi_makanan . '
-         </td>
      </tr>
+     <tr>
+     <td style="width: 100px;padding-top: 7px;">
+     <label for="file">Riwayat Alergi Makanan</label>
+        </td>
+        <td style="width: 200px;padding-left:8px;">
+            ' . $track_users->riwayat_alergi_makanan . '
+        </td>
+     </tr>
+
+     
      <tr>
          <td style="width: 100px;padding-top: 7px;">
              <label for="file">Tindakan Medis</label>
@@ -910,12 +1047,16 @@ class Dashboard extends CI_Controller
          <td style="width: 200px;padding-left:8px;">
              ' . $track_users->tindakan_medis . '
          </td>
-         <td style="width: 100px;padding-top: 7px;">
-             <label for="file">Konsultasi Dokter Spesialis</label>
-         </td>
-         <td style="width: 200px;padding-left:8px;">
-             ' . $track_users->konsultasi_dokter_spesialis . '
-         </td>
+     </tr>
+
+     <tr>
+     
+     <td style="width: 100px;padding-top: 7px;">
+     <label for="file">Konsultasi Dokter Spesialis</label>
+        </td>
+        <td style="width: 200px;padding-left:8px;">
+            ' . $track_users->konsultasi_dokter_spesialis . '
+        </td>
      </tr>
      
      
@@ -953,8 +1094,23 @@ class Dashboard extends CI_Controller
 
 
  <tr>
+ <td style="width: 100px; height: 100px; padding-top: 7px;">
+   <label for="file">Hasil Penunjang</label>
+ </td>
+ <td style="width: 200px; padding-bottom: 5px; vertical-align: top;">
+   ' . $testString . '
+ </td>
+ <td style="width: 100px; padding-top: 7px;">
+   <label for="file"></label>
+ </td>
+ <td style="width: 200px; padding-bottom: 5px;">
+
+ </td>
+</tr>
+
+ <tr>
  <td style="width: 100px;height:100px; padding-top: 7px;">
-   <label for="file">Jam Pindah</label>
+   <label for="file">Jam pindah / KRS / MRS </label>
  <td style="width: 200px;" style="padding-bottom:5px">
     ' . $track_users->jam_pindah . '
  </td>
@@ -966,6 +1122,8 @@ class Dashboard extends CI_Controller
  </td>
  </td>
 </tr>
+
+
 </tr>
 </table>
      ';
@@ -1036,6 +1194,7 @@ class Dashboard extends CI_Controller
             $LK = $this->input->post('LK');
             $LL = $this->input->post('LL');
             $LD = $this->input->post('LD');
+
             $keluhan_utama = $this->input->post('keluhan_utama');
             $anamnesis = $this->input->post('anamnesis');
             $riwayat_penyakit_dahulu = $this->input->post('riwayat_penyakit_dahulu');
@@ -1047,6 +1206,11 @@ class Dashboard extends CI_Controller
             $keterangan = strip_tags(str_replace(["\r", "\n"], "", $this->input->post('keterangan')));
             $jam_pindah = $this->input->post('jam_pindah');
             $id_user = $this->input->post('id_user');
+            $spo2 = $this->input->post('spo2');
+            $hasil_penunjang = $this->input->post('hasil_penunjang');
+
+
+
 
             // Buat array untuk disimpan ke dalam database
             $data = array(
@@ -1065,9 +1229,11 @@ class Dashboard extends CI_Controller
                 'LK' => $LK,
                 'LL' => $LL,
                 'LD' => $LD,
+                'spo' => $spo2,
+                'hasil_penunjang' => $hasil_penunjang,
                 'keluhan_utama' => $keluhan_utama,
-                'anamnesis' => $anamnesis,
-                'riwayat_penyakit_dahulu' => $riwayat_penyakit_dahulu,
+                'anamnesis' => $anamnesis,                
+                'riwayatpenyakit_terdahulu' => $riwayat_penyakit_dahulu,
                 'riwayat_alergi_obat' => $riwayat_alergi_obat,
                 'riwayat_alergi_makanan' => $riwayat_alergi_makanan,
                 'tindakan_medis' => $tindakan_medis,

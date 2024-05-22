@@ -109,7 +109,7 @@
                 <div class="form-group row ml-5 mr-5">
                   <label for="diagnosa_tambahan" class="col-sm-2 col-form-label">Diagnosa Tambahan</label>
                   <div class="col-sm-10">
-                    <input class="form-control" id="diagnosa_tambahan" name="diagnosa_tambahan" value="<?php echo $tes->diagnosa_tambahan; ?>"/>
+                    <input class="form-control" id="diagnosa_tambahan" name="diagnosa_tambahan" value="<?php echo $tes->diagnosa_tambahan; ?>" />
 
                     <?= form_error('diagnosa_tambahan', '<small class="text-danger pl-3">', '</small>') ?>
                   </div>
@@ -181,7 +181,7 @@
 
                   <label for="berat_badan" class="col-sm-2 col-form-label" style="text-align: center;">Berat badan</label>
                   <div class="col-sm-2">
-                    <input class="form-control" id="berat_badan" name="berat_badan"  value="<?php echo $tes->berat_badan ?>"  />
+                    <input class="form-control" id="berat_badan" name="berat_badan" value="<?php echo $tes->berat_badan ?>" />
 
                     <?= form_error('berat_badan', '<small class="text-danger pl-3">', '</small>') ?>
                   </div>
@@ -197,6 +197,16 @@
                     <input class="form-control" id="gcs" name="GCS" value="<?php echo $tes->GCS; ?>" />
 
                     <?= form_error('GCS', '<small class="text-danger pl-3">', '</small>') ?>
+                  </div>
+
+
+
+                  <label for="spo2" class="col-sm-2 col-form-label" style="text-align: center;">SPO2 (1)</label>
+
+                  <div class="col-sm-2">
+                    <input class="form-control" type="number" id="spo2" name="spo2" value="<?php  echo $tes->spo;?>" placeholder="SPO2 (1)" />
+
+                    <?= form_error('spo2', '<small class="text-danger pl-3">', '</small>') ?>
                   </div>
                   <!--  -->
                 </div>
@@ -314,11 +324,20 @@
                 </div>
 
 
+                <div class="form-group row ml-5 mr-5">
+                <label for="tindakan_di_igd" class="col-sm-2 col-form-label">Hasil Penunjang<sup style="color: red;">*</sup></label>
+                <div class="col-sm-10">
+                  <textarea class="form-control" id="hasil_penunjang" name="hasil_penunjang" value=""><?php echo $tes->hasil_penunjang; ?></textarea>
+                  <small class="text-danger pl-3" id="form-error"></small>
+                </div>
+              </div>
+
+
 
                 <div class="form-group row ml-5 mr-5">
                   <label for="keterangan" class="col-sm-2 col-form-label">Keterangan<sup style="color: red;">*</sup></label>
                   <div class="col-sm-10">
-                    <input class="form-control" id="keterangan" name="keterangan" value="<?php echo $tes->keterangan; ?>"/>
+                    <input class="form-control" id="keterangan" name="keterangan" value="<?php echo $tes->keterangan; ?>" />
                     <?= form_error('keterangan', '<small class="text-danger pl-3">', '</small>') ?>
                   </div>
                 </div>
@@ -516,10 +535,4 @@
     CKEDITOR.instances.tindakan_di_igd.on('instanceReady', function() {
       CKEDITOR.instances.tindakan_di_igd.setData(tindakan_di_igd);
     });
-
-
-
-
-
-
   </script>

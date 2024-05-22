@@ -41,17 +41,20 @@ class Login extends CI_Controller
                             'id_level' => $row['id_level'],
                             'departemen' => $row['departemen']
                         ];
+
+                        // $_SESSION['id_users'] = $row['id_user'];
                         $this->session->set_userdata($data);
                         if ($row['id_level'] == 1) {
                             redirect('admin/Dashboard');
-                        } elseif ($row['id_level'] == 2 || $row['id_level'] == 3 ) {
-                            redirect('user/Dashboard/index');
                         } else {
-                            // redirect('teknisi/Dashboard');
-                        }
+
+                            // var_dump($row['id_level']);die;
+                            redirect('user/Dashboard/index');
+                        } 
                     }else {
                         $this->session->set_flashdata('message', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
                         <strong>Password Anda Salah!!!</strong> 
+
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                         </button>
