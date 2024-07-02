@@ -221,9 +221,12 @@ class Dashboard extends CI_Controller
             $riwayat_penyakit_dahulu = $this->input->post('riwayat_penyakit_dahulu');
             $riwayat_alergi_obat = $this->input->post('riwayat_alergi_obat');
             $riwayat_alergi_makanan = $this->input->post('riwayat_alergi_makanan');
-            $tindakan_medis = strip_tags(str_replace(["\r", "\n"], "", $this->input->post('konsultasi_dokter_spesialis')));
-            $konsultasi_dokter_spesialis =  strip_tags(str_replace(["\r", "\n"], "", $this->input->post('konsultasi_dokter_spesialis')));
-            $tindakan_di_igd = strip_tags(str_replace(["\r", "\n"], "", $this->input->post('tindakan_di_igd')));
+            $tindakan_medis = $this->input->post('tindakan_medis');
+            $konsultasi_dokter_spesialis =  $this->input->post('konsultasi_dokter_spesialis');
+            $tindakan_di_igd = $this->input->post('tindakan_di_igd');
+
+            $tanggal_triase = $this->input->post('tanggal_triase');
+
             $keterangan = strip_tags(str_replace(["\r", "\n"], "", $this->input->post('keterangan')));
             $jam_pindah = $this->input->post('jam_pindah');
             $id_user = $this->input->post('id_user');
@@ -232,6 +235,7 @@ class Dashboard extends CI_Controller
             $data = array(
                 'no_rekam_medik' => $nomor_rekam_medik,
                 'no_pendaftaran' => $no_pendaftaran,
+                'tanggal_triase'=>$tanggal_triase,
                 'tanggal_jam_pasien_masuk' => $tanggal_mrs,
                 'nama_pasien' => $nama_pasien,
                 'dokter_jaga_igd' => $dokter_jaga_igd,
@@ -267,11 +271,26 @@ class Dashboard extends CI_Controller
             // Insert data ke dalam database
             $this->db->insert('laporan_rekap', $data);
 
+
+    // $this->session->set_flashdata('success', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+    //         <strong>Data Berhasil Ditambahkan !!!</strong> 
+    //         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    //         <span aria-hidden="true">&times;</span>
+    //         </button>
+    //         </div>');
+
+
+    $this->session->set_flashdata('success', 'Data Berhasil Disimpan');
+
             // Redirect setelah berhasil insert data
             redirect('user/Dashboard');
         } else {
             // Jika validasi gagal, kembali ke form pembuatan tiket
-            $this->buat_tiket();
+
+            
+                $this->session->set_flashdata('error', 'Data gagal disimpan, silakan isi ulang!');
+                redirect('user/Dashboard');
+            // $this->buat_tiket();
         }
     }
 
@@ -382,6 +401,37 @@ class Dashboard extends CI_Controller
             }
         } else {
             $this->ubah_password();
+        }
+    }
+
+    public function getData() {
+        // URL API eksternal
+        $parameter=$_GET['q'];
+        $url = 'http://helpdesk.myftp.org:998/helpdesk-api-dashboard/panggilDataPendaftaran.php?q='.$parameter;
+
+        // Inisialisasi cURL dan set opsi
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+
+        // Eksekusi cURL dan simpan hasilnya
+        $response = curl_exec($ch);
+
+        // Periksa apakah ada kesalahan
+        if (curl_errno($ch)) {
+            $error_msg = curl_error($ch);
+            curl_close($ch);
+            echo json_encode(['error' => $error_msg]);
+        } else {
+            // Tutup sesi cURL
+            curl_close($ch);
+
+            // Decode hasil JSON
+            $data = json_decode($response, true);
+
+            // Kirim hasil JSON ke frontend
+            echo json_encode($data);
         }
     }
 
@@ -1200,9 +1250,9 @@ class Dashboard extends CI_Controller
             $riwayat_penyakit_dahulu = $this->input->post('riwayat_penyakit_dahulu');
             $riwayat_alergi_obat = $this->input->post('riwayat_alergi_obat');
             $riwayat_alergi_makanan = $this->input->post('riwayat_alergi_makanan');
-            $tindakan_medis = strip_tags(str_replace(["\r", "\n"], "", $this->input->post('konsultasi_dokter_spesialis')));
-            $konsultasi_dokter_spesialis =  strip_tags(str_replace(["\r", "\n"], "", $this->input->post('konsultasi_dokter_spesialis')));
-            $tindakan_di_igd = strip_tags(str_replace(["\r", "\n"], "", $this->input->post('tindakan_di_igd')));
+            $tindakan_medis = $this->input->post('tindakan_medis');
+            $konsultasi_dokter_spesialis =  $this->input->post('konsultasi_dokter_spesialis');
+            $tindakan_di_igd = $this->input->post('tindakan_di_igd');
             $keterangan = strip_tags(str_replace(["\r", "\n"], "", $this->input->post('keterangan')));
             $jam_pindah = $this->input->post('jam_pindah');
             $id_user = $this->input->post('id_user');
@@ -1250,11 +1300,12 @@ class Dashboard extends CI_Controller
 
             if ($save) {
                 # code...
-                $this->session->set_flashdata('msg_success', 'Data telah diubah!');
+                $this->session->set_flashdata('success', 'Data telah diubah!');
                 redirect('user/Dashboard');
             } else {
-                echo "Gagal";
-                die;
+
+                $this->session->set_flashdata('error', 'Data gagal disimpan, silakan isi ulang!');
+                redirect('user/Dashboard');
             }
             // Redirect setelah berhasil insert data
         } else {

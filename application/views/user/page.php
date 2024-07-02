@@ -89,7 +89,7 @@
                                                 <th>Solusi</th>
                                                 <th>Tanggal Ajuan</th>
                                                 <th>Status</th> -->
-                                                <th colspan="2" style="text-align: center;">Detail Attachment</th>
+                                                <th colspan="2" style="text-align: center;">Detail Aksi</th>
                                                 <th>Detail</th>
 
                                             </tr>

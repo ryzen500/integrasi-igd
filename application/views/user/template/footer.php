@@ -10,6 +10,17 @@
     <!-- Core plugin JavaScript-->
     <script src="<?= base_url()?>assets/back/vendor/jquery-easing/jquery.easing.min.js"></script>
 
+    <script type="text/javascript">
+        
+
+<?php if($this->session->flashdata('success')){ ?>
+
+ toastr.success("<?php echo $this->session->flashdata('success'); ?>");
+
+<?php }elseif ($this->session->flashdata('error')) { ?>
+ toastr.error("<?php echo $this->session->flashdata('error'); ?>");
+<?php } ?>
+    </script>
     <!-- Custom scripts for all pages-->
     <script src="<?= base_url()?>assets/back/js/sb-admin-2.min.js"></script>
 

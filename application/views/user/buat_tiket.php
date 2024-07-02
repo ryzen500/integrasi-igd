@@ -14,6 +14,7 @@
       <div id="content">
         <h3 class="container-fluid"><b><?= $title ?></b></h3>
 
+
         <!-- Begin Page Content -->
         <div class="container-fluid">
 
@@ -25,9 +26,9 @@
 
               <div class="form-group row ml-5 mr-5">
                 <!-- Your existing form content here -->
-                <label for="file" class="col-sm-2 col-form-label">Nomor Rekam Medik</label>
+                <label for="file" class="col-sm-2 col-form-label">No Pendaftaran</label>
                 <div class="col-sm-10" id="file-upload-container">
-                  <select id="myDropdown" class="form-control" name="nomor_rekam_medik">
+                  <select id="myDropdown" class="form-control" name="no_pendaftaran">
                     <option value="">--Pilih opsi--</option>
                   </select>
                 </div>
@@ -45,17 +46,37 @@
 
 
               <div class="form-group row ml-5 mr-5">
+                <label for="id" class="col-sm-2 col-form-label">Tanggal Masuk ke IGD</label>
+                <div class="col-sm-10">
+                  <input type="datetime" class="form-control" id="tanggal_triase" name="tanggal_triase" readonly>
+                </div>
+              </div>
+
+
+
+              <div class="form-group row ml-5 mr-5">
                 <!-- Your existing form content here -->
                 <label for="file" class="col-sm-2 col-form-label">Nama Pasien</label>
                 <div class="col-sm-10" id="file-upload-container">
                   <input type="text" class="form-control" id="nama_pasien" name="nama_pasien" readonly>
-                  <input type="hidden" class="form-control" id="no_pendaftaran" name="no_pendaftaran" readonly>
-
+                  
                 </div>
-
+                
               </div>
+              
 
 
+
+              <div class="form-group row ml-5 mr-5">
+                <!-- Your existing form content here -->
+                <label for="file" class="col-sm-2 col-form-label">Nomor Rekam Medik</label>
+                <div class="col-sm-10" id="file-upload-container">
+                <input type="text" class="form-control" id="no_rekam_medik" name="nomor_rekam_medik" readonly>
+                </div>
+                
+              </div>
+              
+              
               <div class="form-group row ml-5 mr-5">
                 <!-- Your existing form content here -->
                 <label for="file" class="col-sm-2 col-form-label">Dokter Jaga IGD</label>
@@ -387,7 +408,8 @@
 
       // var url = 'http://192.168.30.194/helpdesk-api-dashboard/panggilDataPendaftaran.php';
 
-      var url = 'http://helpdesk.myftp.org:998/helpdesk-api-dashboard/panggilDataPendaftaran.php';
+        var url = '<?php echo site_url('user/Dashboard/getData'); ?>';
+      // var url = 'http://helpdesk.myftp.org:998/helpdesk-api-dashboard/panggilDataPendaftaran.php';
 
       var divisi_pelapor = 'http://helpdesk.myftp.org:998/helpdesk-api-dashboard/panggilDataPendaftaran.php';
 
@@ -395,12 +417,11 @@
 
 
       $('#myDropdown').select2({
-        placeholder: 'Masukkan  No Rekam Medik...',
+        placeholder: 'Masukkan  No Pendaftaran...',
         allowClear: true,
         ajax: {
           url: url, // Endpoint API
           dataType: 'json',
-          delay: 250, // Penundaan untuk mengurangi beban server
           data: function(params) {
             return {
               q: params.term // Mengambil parameter pencarian dari input
@@ -437,6 +458,7 @@
                     additionalsuhutubuh = '',
                     additionaldpjp_id = '',
                     additional_spo = '',
+                    tanggal_triase = '',
                     additional_anamnesis = ''
 
 
@@ -463,6 +485,13 @@
                   additionaldetak_nadi = item.child_triase.map(function(triase) {
                     return triase.detaknadi;
                   }).join(', ');
+
+                  tanggal_triase = item.child_triase.map(function(triase){
+
+                    return triase.tglasesmentriase;
+                  }).join(', ');
+
+                  console.log("Tanggal triase ",tanggal_triase);
 
                   additionalpernafasan = item.child_triase.map(function(triase) {
                     return triase.pernapasan;
@@ -515,6 +544,7 @@
                   // Menampilkan additionalTriase di konsol browser
                   // console.log("anamnesa :", keterangananamesa);
                 }
+
 
                 // Penunjang 
 
@@ -586,16 +616,20 @@
 
 
                 $("#keluhan_utama").val(additional_keluhan_utama);
+                $("#tanggal_triase").val(tanggal_triase);
 
                 $("#no_pendaftaran").val(item.no_pendaftaran);
+                $("#no_rekam_medik").val(item.no_rekam_medik);
+
                 $("#nama_pasien").val(item.nama_pasien);
                 $("#diagnosa_primer").val(item.diagnosa_nama);
                 $("#tanggal_mrs").val(item.tgl_pendaftaran);
                 $("#tanggal_lahir_pasien").val(item.tanggal_lahir);
+                $("#dokter_jaga_igd").val(`${item.gelardepan} ${item.nama_pegawai} ${item.gelarbelakang_nama}`);
+
                 $("#detak_nadi").val(additionaldetak_nadi);
                 $("#pernafasan").val(additionalpernafasan);
                 $("#suhu_tubuh").val(additionalsuhutubuh);
-                $("#dokter_jaga_igd").val(additionaldpjp_id);
                 $("#tinggi_badan").val(additionaltinggibadan);
                 $("#berat_badan").val(additionalberatbadan);
                 $("#anamnesis").val(keterangananamesa);
@@ -623,7 +657,7 @@
                 $("#tekanan_darah").val(additionaltekanan_darah);
                 $("#diagnosa_sekunder").val(additionalInfo);
                 return {
-                  id: item.no_rekam_medik,
+                  id: item.no_pendaftaran,
                   text: ` ${item.no_rekam_medik} -- ${item.no_pendaftaran} --  ${item.tgl_pendaftaran}` // Sesuaikan dengan format data dari endpoint
                 };
               })

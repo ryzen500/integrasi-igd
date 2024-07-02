@@ -32,7 +32,12 @@
 
 
                 <form method="POST" action="" enctype="multipart/form-data">
-                  <?php foreach ($track_user as $key => $track_users) {
+                  <?php
+                  function stripSpecificTags($text, $allowedTags = '<b><i><u><span><strong><em>&nbsp;<p>')
+                  {
+                    return strip_tags($text, $allowedTags);
+                  }
+                  foreach ($track_user as $key => $track_users) {
                     # code...
                   ?>
                     <table>
@@ -330,17 +335,17 @@
 
 
                       <tr>
-                        <td style="width: 100px;height:100px; padding-top: 7px;">
+                        <td style="width: 100px;padding-top: 10px;">
                           <label for="file">Tindakan Medis</label>
-                        <td style="width: 200px;" style="padding-bottom:5px">
-                          <?php echo $track_users->tindakan_medis;  ?>
                         </td>
+                        <td style="width: 200px; padding-bottom: 7px;">
+                          <?php echo ($track_users->tindakan_medis);  ?>
                         </td>
                         <td style="width: 100px;padding-top: 7px;">
                           <label for="file"></label>
+                        </td>
                         <td style="width: 200px;" style="padding-bottom:5px">
                           <?php echo "";  ?>
-                        </td>
                         </td>
                       </tr>
 
@@ -363,10 +368,10 @@
 
 
                       <tr>
-                        <td style="width: 100px;height:100px; padding-top: 7px;">
+                        <td style="width: 100px;height:100px; padding-bottom: 120px;">
                           <label for="file">Tindakan Di IGD</label>
-                        <td style="width: 200px;" style="padding-bottom:5px">
-                          <?php echo $track_users->tindakan_di_igd;  ?>
+                        <td style="width: 200px;">
+                          <?php echo stripSpecificTags($track_users->tindakan_di_igd);  ?>
                         </td>
                         </td>
                         <td style="width: 100px;padding-top: 7px;">

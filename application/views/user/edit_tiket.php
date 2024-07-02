@@ -31,7 +31,6 @@
 
 
                 <script type="text/javascript">
-                  var tindakan_medis = "<?php echo $tes->tindakan_medis; ?>";
                   var diagnosa_tambahan = '<?php echo $tes->diagnosa_tambahan; ?>';
                   var konsultasi_dokter_spesialis = "<?php echo $tes->konsultasi_dokter_spesialis; ?>";
                   var tindakan_di_igd = "<?php echo $tes->tindakan_di_igd; ?>";
@@ -298,7 +297,7 @@
                 <div class="form-group row ml-5 mr-5">
                   <label for="tindakan_medis" class="col-sm-2 col-form-label">Tindakan Medis<sup style="color: red;">*</sup></label>
                   <div class="col-sm-10">
-                    <textarea class="form-control" id="tindakan_medis" name="tindakan_medis" value=""></textarea>
+                    <textarea class="form-control" id="tindakan_medis" name="tindakan_medis" ><?php echo htmlspecialchars($tes->tindakan_medis, ENT_QUOTES, 'UTF-8'); ?></textarea>
                     <?= form_error('tindakan_medis', '<small class="text-danger pl-3">', '</small>') ?>
                   </div>
                 </div>
@@ -308,7 +307,7 @@
                 <div class="form-group row ml-5 mr-5">
                   <label for="konsultasi_dokter_spesialis" class="col-sm-2 col-form-label">Konsultasi Dokter Spesialis<sup style="color: red;">*</sup></label>
                   <div class="col-sm-10">
-                    <textarea class="form-control" id="konsultasi_dokter_spesialis" name="konsultasi_dokter_spesialis" value=""></textarea>
+                    <textarea class="form-control" id="konsultasi_dokter_spesialis" name="konsultasi_dokter_spesialis" value=""><?php echo htmlspecialchars($tes->konsultasi_dokter_spesialis, ENT_QUOTES, 'UTF-8'); ?></textarea>
                     <?= form_error('konsultasi_dokter_spesialis', '<small class="text-danger pl-3">', '</small>') ?>
                   </div>
                 </div>
@@ -318,7 +317,7 @@
                 <div class="form-group row ml-5 mr-5">
                   <label for="tindakan_di_igd" class="col-sm-2 col-form-label">Tindakan Di IGD<sup style="color: red;">*</sup></label>
                   <div class="col-sm-10">
-                    <textarea class="form-control" id="tindakan_di_igd" name="tindakan_di_igd" value=""></textarea>
+                    <textarea class="form-control" id="tindakan_di_igd" name="tindakan_di_igd" value=""><?php echo htmlspecialchars($tes->tindakan_di_igd, ENT_QUOTES, 'UTF-8'); ?></textarea>
                     <?= form_error('tindakan_di_igd', '<small class="text-danger pl-3">', '</small>') ?>
                   </div>
                 </div>
@@ -482,7 +481,6 @@
     }
 
     // Setel nilai textarea sebelum menginisialisasi ulang CKEditor
-    $("#tindakan_medis").val(tindakan_medis);
 
     // Inisialisasi ulang CKEditor
     CKEDITOR.replace('tindakan_medis');
@@ -503,8 +501,6 @@
 
 
     console.log("Konsultasi Dokter Spesialis ", konsultasi_dokter_spesialis);
-    // Setel nilai textarea sebelum menginisialisasi ulang CKEditor
-    $("#konsultasi_dokter_spesialis").val(konsultasi_dokter_spesialis);
 
     // Inisialisasi ulang CKEditor
     CKEDITOR.replace('konsultasi_dokter_spesialis');
@@ -525,8 +521,6 @@
 
 
     console.log("Konsultasi Dokter Spesialis ", tindakan_di_igd);
-    // Setel nilai textarea sebelum menginisialisasi ulang CKEditor
-    $("#tindakan_di_igd").val(tindakan_di_igd);
 
     // Inisialisasi ulang CKEditor
     CKEDITOR.replace('tindakan_di_igd');
